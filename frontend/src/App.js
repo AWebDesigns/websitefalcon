@@ -809,7 +809,7 @@ const Navigation = ({ onOpenModal }) => {
               alt="Falcon Web Studio" 
               className="w-12 h-12 object-contain"
             />
-            <span className="text-xl font-bold text-slate-950 font-['Outfit']">Falcon</span>
+            <span className="text-xl font-bold text-slate-950 font-['Outfit']">Falcon Web Studio</span>
           </a>
 
           {/* Desktop Navigation */}
