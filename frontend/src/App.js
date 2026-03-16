@@ -133,8 +133,6 @@ const featuresData = [
 const FlyingFalcon = () => {
   const { scrollYProgress } = useScroll();
   const [windowHeight, setWindowHeight] = useState(800);
-  const [scrollDirection, setScrollDirection] = useState('down');
-  const lastScrollY = useRef(0);
   
   useEffect(() => {
     setWindowHeight(window.innerHeight);
@@ -142,19 +140,6 @@ const FlyingFalcon = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-  
-  // Track scroll direction
-  useEffect(() => {
-    const unsubscribe = scrollYProgress.on('change', (latest) => {
-      if (latest > lastScrollY.current) {
-        setScrollDirection('down');
-      } else if (latest < lastScrollY.current) {
-        setScrollDirection('up');
-      }
-      lastScrollY.current = latest;
-    });
-    return () => unsubscribe();
-  }, [scrollYProgress]);
   
   // Transform scroll progress to position - flies across the page
   const y = useTransform(scrollYProgress, [0, 1], [100, windowHeight - 200]);
@@ -166,23 +151,6 @@ const FlyingFalcon = () => {
   const bodyRotate = useTransform(scrollYProgress, [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1], 
     [0, 15, 10, -15, -10, 15, 10, -10, 0]
   );
-  
-  // Flip bird horizontally based on direction (1 = facing right, -1 = facing left)
-  const pathFlipX = useTransform(scrollYProgress, [0, 0.24, 0.26, 0.49, 0.51, 0.74, 0.76, 1], 
-    [1, 1, -1, -1, 1, 1, -1, -1]
-  );
-  
-  // Combined flip: path direction + scroll direction (down reverses it)
-  const [combinedFlipX, setCombinedFlipX] = useState(1);
-  
-  useEffect(() => {
-    const unsubscribe = pathFlipX.on('change', (pathValue) => {
-      // When scrolling down, reverse the horizontal direction
-      const directionMultiplier = scrollDirection === 'down' ? -1 : 1;
-      setCombinedFlipX(pathValue * directionMultiplier);
-    });
-    return () => unsubscribe();
-  }, [pathFlipX, scrollDirection]);
   
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1.5, 1]);
   
@@ -222,12 +190,6 @@ const FlyingFalcon = () => {
           rotate: bodyRotate,
           originX: 0.5,
           originY: 0.5,
-        }}
-        animate={{
-          scaleX: combinedFlipX,
-        }}
-        transition={{
-          scaleX: { duration: 0.3, ease: "easeInOut" }
         }}
       >
         <motion.img 
