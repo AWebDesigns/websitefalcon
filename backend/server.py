@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi import FastAPI, APIRouter, HTTPException, Header
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
+import hashlib
 
 
 ROOT_DIR = Path(__file__).parent
@@ -18,6 +19,9 @@ load_dotenv(ROOT_DIR / '.env')
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
+
+# Admin password
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'falcon2024admin')
 
 # Create the main app without a prefix
 app = FastAPI()
@@ -44,6 +48,9 @@ class LeadCreate(BaseModel):
     business_name: Optional[str] = None
     website_url: Optional[str] = None
     message: Optional[str] = None
+    project_type: Optional[str] = None
+    preferred_contact: Optional[str] = None
+    phone: Optional[str] = None
 
 class Lead(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -54,8 +61,18 @@ class Lead(BaseModel):
     business_name: Optional[str] = None
     website_url: Optional[str] = None
     message: Optional[str] = None
+    project_type: Optional[str] = None
+    preferred_contact: Optional[str] = None
+    phone: Optional[str] = None
     status: str = "new"
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class AdminLogin(BaseModel):
+    password: str
+
+class AdminLoginResponse(BaseModel):
+    success: bool
+    token: str = None
 
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
@@ -102,8 +119,13 @@ async def create_lead(input: LeadCreate):
     return lead_obj
 
 @api_router.get("/leads", response_model=List[Lead])
-async def get_leads():
-    """Get all leads (for admin purposes)"""
+async def get_leads(x_admin_token: str = Header(None)):
+    """Get all leads (password protected)"""
+    # Verify admin token
+    expected_token = hashlib.sha256(ADMIN_PASSWORD.encode()).hexdigest()
+    if x_admin_token != expected_token:
+        raise HTTPException(status_code=401, detail="Unauthorized - Invalid admin token")
+    
     leads = await db.leads.find({}, {"_id": 0}).to_list(1000)
     
     for lead in leads:
@@ -111,6 +133,26 @@ async def get_leads():
             lead['created_at'] = datetime.fromisoformat(lead['created_at'])
     
     return leads
+
+@api_router.post("/admin/login", response_model=AdminLoginResponse)
+async def admin_login(login: AdminLogin):
+    """Admin login to get access token"""
+    if login.password == ADMIN_PASSWORD:
+        token = hashlib.sha256(ADMIN_PASSWORD.encode()).hexdigest()
+        return {"success": True, "token": token}
+    raise HTTPException(status_code=401, detail="Invalid password")
+
+@api_router.delete("/leads/{lead_id}")
+async def delete_lead(lead_id: str, x_admin_token: str = Header(None)):
+    """Delete a lead (password protected)"""
+    expected_token = hashlib.sha256(ADMIN_PASSWORD.encode()).hexdigest()
+    if x_admin_token != expected_token:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    
+    result = await db.leads.delete_one({"id": lead_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Lead not found")
+    return {"message": "Lead deleted"}
 
 # Include the router in the main app
 app.include_router(api_router)
