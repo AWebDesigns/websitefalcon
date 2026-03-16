@@ -1401,7 +1401,7 @@ const QuestionsSection = () => {
               </Button>
               <Button
                 variant="outline"
-                onClick={() => window.location.href = "mailto:abbesalem977@gmail.com"}
+                onClick={() => window.location.href = "mailto:falconwebdesignit@gmail.com"}
                 className="rounded-full px-6 py-5 border-slate-300"
                 data-testid="questions-email-btn"
               >
@@ -1456,7 +1456,7 @@ const Footer = () => {
                 <MessageCircle className="w-5 h-5 text-white" />
               </a>
               <a
-                href="mailto:abbesalem977@gmail.com"
+                href="mailto:falconwebdesignit@gmail.com"
                 className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors"
                 data-testid="footer-email-link"
               >
@@ -1509,7 +1509,7 @@ const Footer = () => {
           <div>
             <h4 className="text-white font-semibold mb-4">{t.contact}</h4>
             <ul className="space-y-3 text-slate-400">
-              <li>abbesalem977@gmail.com</li>
+              <li>falconwebdesignit@gmail.com</li>
               <li>{t.whatsappAvailable}</li>
             </ul>
           </div>
