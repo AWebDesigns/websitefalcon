@@ -37,8 +37,9 @@ import axios from "axios";
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-// Falcon logo URL
+// Falcon logo URLs
 const FALCON_LOGO = "https://customer-assets.emergentagent.com/job_falcon-studio/artifacts/lbmevzfg_image.png";
+const FALCON_FLYING = "https://customer-assets.emergentagent.com/job_falcon-studio/artifacts/wwc81btc_image.png";
 
 // Portfolio data
 const portfolioData = [
@@ -128,33 +129,64 @@ const featuresData = [
   { icon: BarChart, title: "Conversion Focused", description: "Designed to drive results" },
 ];
 
-// Flying Falcon Component - follows scroll
+// Flying Falcon Component - follows scroll in background
 const FlyingFalcon = () => {
   const { scrollYProgress } = useScroll();
+  const [windowHeight, setWindowHeight] = useState(800);
   
-  // Transform scroll progress to position
-  const y = useTransform(scrollYProgress, [0, 1], [80, typeof window !== 'undefined' ? window.innerHeight - 150 : 600]);
-  const x = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [60, 100, 60, 80]);
-  const rotate = useTransform(scrollYProgress, [0, 0.5, 1], [0, 15, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.2, 1]);
-  const opacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [0, 1, 1, 0]);
+  useEffect(() => {
+    setWindowHeight(window.innerHeight);
+    const handleResize = () => setWindowHeight(window.innerHeight);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
+  // Transform scroll progress to position - flies across the page
+  const y = useTransform(scrollYProgress, [0, 1], [100, windowHeight - 200]);
+  const x = useTransform(scrollYProgress, [0, 0.25, 0.5, 0.75, 1], [
+    '10vw', '60vw', '30vw', '70vw', '50vw'
+  ]);
+  const rotate = useTransform(scrollYProgress, [0, 0.25, 0.5, 0.75, 1], [0, 15, -10, 20, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1.5, 1]);
+  
+  // Opacity - visible only in the middle of scroll, fades at edges
+  const opacity = useTransform(scrollYProgress, [0, 0.08, 0.92, 1], [0, 0.15, 0.15, 0]);
+  
+  // Switch between sitting logo and flying falcon based on scroll
+  const flyingOpacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [0, 1, 1, 0]);
+  const sittingOpacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [1, 0, 0, 1]);
 
   return (
     <motion.div
-      className="fixed z-40 pointer-events-none"
+      className="fixed pointer-events-none"
       style={{
         y,
         x,
         rotate,
         scale,
         opacity,
+        zIndex: 5, // Behind content but above background
       }}
     >
-      <img 
-        src={FALCON_LOGO} 
+      {/* Flying falcon - visible during scroll */}
+      <motion.img 
+        src={FALCON_FLYING} 
         alt="Flying Falcon" 
-        className="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-2xl"
-        style={{ filter: 'drop-shadow(0 4px 20px rgba(0,0,0,0.3))' }}
+        className="w-32 h-32 md:w-48 md:h-48 object-contain"
+        style={{ 
+          opacity: flyingOpacity,
+          filter: 'drop-shadow(0 8px 30px rgba(0,0,0,0.2))',
+        }}
+      />
+      {/* Sitting falcon - visible at start and end */}
+      <motion.img 
+        src={FALCON_LOGO} 
+        alt="Falcon Logo" 
+        className="w-24 h-24 md:w-32 md:h-32 object-contain absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        style={{ 
+          opacity: sittingOpacity,
+          filter: 'drop-shadow(0 4px 20px rgba(0,0,0,0.15))',
+        }}
       />
     </motion.div>
   );
