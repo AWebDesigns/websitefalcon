@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, createContext, useContext } from "react";
 import "@/App.css";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import {
@@ -40,6 +40,289 @@ const API = `${BACKEND_URL}/api`;
 // Falcon logo URLs
 const FALCON_LOGO = "https://customer-assets.emergentagent.com/job_falcon-studio/artifacts/gj7z2aki_image.png";
 const FALCON_FLYING = "https://customer-assets.emergentagent.com/job_falcon-studio/artifacts/3pq6tkx5_image.png";
+
+// Language Context
+const LanguageContext = createContext();
+
+export const useLanguage = () => useContext(LanguageContext);
+
+// Translations
+const translations = {
+  en: {
+    // Navigation
+    nav: {
+      services: "Services",
+      work: "Work",
+      process: "Process",
+      getStarted: "Get Started",
+    },
+    // Hero
+    hero: {
+      badge: "Premium Web Design Agency",
+      headline1: "Websites That Turn",
+      headline2: "Visitors",
+      headline3: "Into",
+      headline4: "Customers",
+      subtext: "We design fast, modern websites for businesses that want to grow online. Precision-engineered digital experiences that convert.",
+      ctaPreview: "Request Free Website Preview",
+      ctaWork: "View Our Work",
+      trustedBy: "Trusted by innovative companies",
+    },
+    // Services
+    services: {
+      badge: "Our Services",
+      title: "What We Do Best",
+      subtitle: "Specialized in creating high-performance websites that drive business growth",
+      learnMore: "Learn more",
+      items: [
+        {
+          title: "Website Design",
+          description: "Custom UI/UX design tailored to your brand identity. Every pixel crafted for maximum impact.",
+        },
+        {
+          title: "Website Redesign",
+          description: "Modernizing legacy sites for better performance, aesthetics, and user experience.",
+        },
+        {
+          title: "Conversion Optimization",
+          description: "Data-driven strategies to transform your traffic into measurable revenue growth.",
+        },
+      ],
+    },
+    // Portfolio
+    portfolio: {
+      badge: "Our Work",
+      title: "Selected Projects",
+      subtitle: "A showcase of our recent work for ambitious brands",
+    },
+    // Process
+    process: {
+      badge: "Our Process",
+      title: "How We Work",
+      subtitle: "A proven methodology that delivers exceptional results every time",
+      steps: [
+        { number: "01", title: "Strategy", description: "Understanding your goals and target audience" },
+        { number: "02", title: "Design", description: "Crafting visuals that align with your brand" },
+        { number: "03", title: "Development", description: "Building with clean, optimized code" },
+        { number: "04", title: "Launch", description: "Going live with ongoing support" },
+      ],
+    },
+    // Why Choose Us
+    features: {
+      badge: "Why Choose Us",
+      title: "Built for Performance",
+      subtitle: "We don't just build websites — we engineer digital experiences that are fast, accessible, and designed to convert visitors into loyal customers.",
+      cta: "Start Your Project",
+      items: [
+        { title: "Fast Delivery", description: "Projects delivered in 2-4 weeks" },
+        { title: "Mobile Optimized", description: "Flawless on every device" },
+        { title: "SEO Ready", description: "Built to rank on search engines" },
+        { title: "Conversion Focused", description: "Designed to drive results" },
+      ],
+    },
+    // Questions
+    questions: {
+      title: "Questions?",
+      subtitle: "We're here to help. Reach out anytime — no pressure, no obligations.",
+      whatsapp: "Chat on WhatsApp",
+      email: "Send Email",
+    },
+    // CTA
+    cta: {
+      badge: "Free Demo Offer",
+      title: "Get Your Free Website Demo",
+      subtitle: "We will design a homepage preview for your business before you pay anything. No commitment, no risk.",
+      ctaPreview: "Request Free Website Preview",
+      ctaWhatsapp: "Chat on WhatsApp",
+    },
+    // Footer
+    footer: {
+      description: "Premium web design agency crafting high-performance websites for businesses that want to grow online.",
+      quickLinks: "Quick Links",
+      contact: "Contact",
+      whatsappAvailable: "WhatsApp Available",
+      rights: "All rights reserved.",
+      tagline: "Designed with precision. Built for performance.",
+    },
+    // Modal
+    modal: {
+      title: "Request Free Website Preview",
+      subtitle: "Tell us about your business and we'll design a homepage preview — completely free, no strings attached.",
+      whatNeed: "What do you need?",
+      newWebsite: "New Website",
+      newWebsiteDesc: "Build from scratch",
+      fixExisting: "Fix / Redesign",
+      fixExistingDesc: "Improve existing site",
+      yourName: "Your Name",
+      email: "Email",
+      businessName: "Business Name",
+      currentWebsite: "Current Website (if any)",
+      preferredContact: "Preferred contact method for your preview",
+      whatsapp: "WhatsApp",
+      fasterResponse: "Faster response",
+      traditional: "Traditional",
+      whatsappNumber: "WhatsApp Number",
+      projectWork: "Tell us about your project / work",
+      projectPlaceholder: "Example: I'm looking for a modern, minimalist website for my consulting business with a booking system...",
+      submit: "Get My Free Preview",
+      submitting: "Submitting...",
+    },
+  },
+  sv: {
+    // Navigation
+    nav: {
+      services: "Tjänster",
+      work: "Arbeten",
+      process: "Process",
+      getStarted: "Kom igång",
+    },
+    // Hero
+    hero: {
+      badge: "Premium Webbdesignbyrå",
+      headline1: "Webbplatser som förvandlar",
+      headline2: "besökare",
+      headline3: "till",
+      headline4: "kunder",
+      subtext: "Vi designar snabba, moderna webbplatser för företag som vill växa online. Precisionsbyggda digitala upplevelser som konverterar.",
+      ctaPreview: "Begär gratis webbförhandsvisning",
+      ctaWork: "Se våra arbeten",
+      trustedBy: "Betrodd av innovativa företag",
+    },
+    // Services
+    services: {
+      badge: "Våra tjänster",
+      title: "Vad vi gör bäst",
+      subtitle: "Specialiserade på att skapa högpresterande webbplatser som driver affärstillväxt",
+      learnMore: "Läs mer",
+      items: [
+        {
+          title: "Webbdesign",
+          description: "Skräddarsydd UI/UX-design anpassad till ditt varumärke. Varje pixel skapad för maximal effekt.",
+        },
+        {
+          title: "Webbomdesign",
+          description: "Modernisering av äldre webbplatser för bättre prestanda, estetik och användarupplevelse.",
+        },
+        {
+          title: "Konverteringsoptimering",
+          description: "Datadrivna strategier för att omvandla din trafik till mätbar intäktstillväxt.",
+        },
+      ],
+    },
+    // Portfolio
+    portfolio: {
+      badge: "Våra arbeten",
+      title: "Utvalda projekt",
+      subtitle: "En presentation av vårt senaste arbete för ambitiösa varumärken",
+    },
+    // Process
+    process: {
+      badge: "Vår process",
+      title: "Hur vi arbetar",
+      subtitle: "En beprövad metodik som levererar exceptionella resultat varje gång",
+      steps: [
+        { number: "01", title: "Strategi", description: "Förstå dina mål och målgrupp" },
+        { number: "02", title: "Design", description: "Skapa visuellt som passar ditt varumärke" },
+        { number: "03", title: "Utveckling", description: "Bygga med ren, optimerad kod" },
+        { number: "04", title: "Lansering", description: "Gå live med löpande support" },
+      ],
+    },
+    // Why Choose Us
+    features: {
+      badge: "Varför välja oss",
+      title: "Byggd för prestanda",
+      subtitle: "Vi bygger inte bara webbplatser — vi skapar digitala upplevelser som är snabba, tillgängliga och designade för att konvertera besökare till lojala kunder.",
+      cta: "Starta ditt projekt",
+      items: [
+        { title: "Snabb leverans", description: "Projekt levererade på 2-4 veckor" },
+        { title: "Mobiloptimerad", description: "Felfri på alla enheter" },
+        { title: "SEO-redo", description: "Byggd för att ranka på sökmotorer" },
+        { title: "Konverteringsfokuserad", description: "Designad för att driva resultat" },
+      ],
+    },
+    // Questions
+    questions: {
+      title: "Frågor?",
+      subtitle: "Vi finns här för att hjälpa. Kontakta oss när som helst — ingen press, inga förpliktelser.",
+      whatsapp: "Chatta på WhatsApp",
+      email: "Skicka e-post",
+    },
+    // CTA
+    cta: {
+      badge: "Gratis demo-erbjudande",
+      title: "Få din gratis webbdemo",
+      subtitle: "Vi designar en förhandsvisning av startsidan för ditt företag innan du betalar något. Ingen förbindelse, ingen risk.",
+      ctaPreview: "Begär gratis webbförhandsvisning",
+      ctaWhatsapp: "Chatta på WhatsApp",
+    },
+    // Footer
+    footer: {
+      description: "Premium webbdesignbyrå som skapar högpresterande webbplatser för företag som vill växa online.",
+      quickLinks: "Snabblänkar",
+      contact: "Kontakt",
+      whatsappAvailable: "WhatsApp tillgänglig",
+      rights: "Alla rättigheter förbehållna.",
+      tagline: "Designad med precision. Byggd för prestanda.",
+    },
+    // Modal
+    modal: {
+      title: "Begär gratis webbförhandsvisning",
+      subtitle: "Berätta om ditt företag så designar vi en förhandsvisning av startsidan — helt gratis, utan förpliktelser.",
+      whatNeed: "Vad behöver du?",
+      newWebsite: "Ny webbplats",
+      newWebsiteDesc: "Bygg från grunden",
+      fixExisting: "Fixa / Omdesigna",
+      fixExistingDesc: "Förbättra befintlig webbplats",
+      yourName: "Ditt namn",
+      email: "E-post",
+      businessName: "Företagsnamn",
+      currentWebsite: "Nuvarande webbplats (om någon)",
+      preferredContact: "Föredragen kontaktmetod för din förhandsvisning",
+      whatsapp: "WhatsApp",
+      fasterResponse: "Snabbare svar",
+      traditional: "Traditionell",
+      whatsappNumber: "WhatsApp-nummer",
+      projectWork: "Berätta om ditt projekt / arbete",
+      projectPlaceholder: "Exempel: Jag letar efter en modern, minimalistisk webbplats för mitt konsultföretag med ett bokningssystem...",
+      submit: "Få min gratis förhandsvisning",
+      submitting: "Skickar...",
+    },
+  },
+};
+
+// Language Switcher Component
+const LanguageSwitcher = () => {
+  const { language, setLanguage } = useLanguage();
+  
+  return (
+    <div className="flex items-center gap-2 bg-slate-100 rounded-full p-1" data-testid="language-switcher">
+      <button
+        onClick={() => setLanguage('en')}
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+          language === 'en' 
+            ? 'bg-white shadow-sm text-slate-900' 
+            : 'text-slate-500 hover:text-slate-700'
+        }`}
+        data-testid="lang-en-btn"
+      >
+        <span className="text-base">🇬🇧</span>
+        <span className="hidden sm:inline">EN</span>
+      </button>
+      <button
+        onClick={() => setLanguage('sv')}
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+          language === 'sv' 
+            ? 'bg-white shadow-sm text-slate-900' 
+            : 'text-slate-500 hover:text-slate-700'
+        }`}
+        data-testid="lang-sv-btn"
+      >
+        <span className="text-base">🇸🇪</span>
+        <span className="hidden sm:inline">SV</span>
+      </button>
+    </div>
+  );
+};
 
 // Portfolio data
 const portfolioData = [
@@ -256,6 +539,9 @@ const FlyingFalcon = () => {
 
 // Lead Capture Modal Component
 const LeadCaptureModal = ({ isOpen, onClose }) => {
+  const { language } = useLanguage();
+  const t = translations[language].modal;
+  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -274,7 +560,7 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
 
     try {
       await axios.post(`${API}/leads`, formData);
-      toast.success("Request submitted! We'll be in touch within 24 hours.");
+      toast.success(language === 'en' ? "Request submitted! We'll be in touch within 24 hours." : "Förfrågan skickad! Vi hör av oss inom 24 timmar.");
       setFormData({ name: "", email: "", business_name: "", website_url: "", message: "", project_type: "", preferred_contact: "whatsapp", phone: "" });
       onClose();
     } catch (error) {
@@ -290,16 +576,16 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
       <DialogContent className="sm:max-w-lg bg-white max-h-[90vh] overflow-y-auto" data-testid="lead-modal">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-slate-950 font-['Outfit']">
-            Request Free Website Preview
+            {t.title}
           </DialogTitle>
           <DialogDescription className="text-slate-600">
-            Tell us about your business and we'll design a homepage preview — completely free, no strings attached.
+            {t.subtitle}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           {/* Project Type Selection */}
           <div className="space-y-2">
-            <Label>What do you need? *</Label>
+            <Label>{t.whatNeed} *</Label>
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
@@ -312,8 +598,8 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
                 data-testid="project-type-new"
               >
                 <Layout className="w-6 h-6 text-blue-500 mb-2" />
-                <div className="font-medium text-slate-900">New Website</div>
-                <div className="text-sm text-slate-500">Build from scratch</div>
+                <div className="font-medium text-slate-900">{t.newWebsite}</div>
+                <div className="text-sm text-slate-500">{t.newWebsiteDesc}</div>
               </button>
               <button
                 type="button"
@@ -326,15 +612,15 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
                 data-testid="project-type-fix"
               >
                 <RefreshCw className="w-6 h-6 text-blue-500 mb-2" />
-                <div className="font-medium text-slate-900">Fix / Redesign</div>
-                <div className="text-sm text-slate-500">Improve existing site</div>
+                <div className="font-medium text-slate-900">{t.fixExisting}</div>
+                <div className="text-sm text-slate-500">{t.fixExistingDesc}</div>
               </button>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Your Name *</Label>
+              <Label htmlFor="name">{t.yourName} *</Label>
               <Input
                 id="name"
                 required
@@ -345,7 +631,7 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email *</Label>
+              <Label htmlFor="email">{t.email} *</Label>
               <Input
                 id="email"
                 type="email"
@@ -359,7 +645,7 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="business_name">Business Name</Label>
+              <Label htmlFor="business_name">{t.businessName}</Label>
               <Input
                 id="business_name"
                 value={formData.business_name}
@@ -369,7 +655,7 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="website_url">Current Website (if any)</Label>
+              <Label htmlFor="website_url">{t.currentWebsite}</Label>
               <Input
                 id="website_url"
                 value={formData.website_url}
@@ -382,7 +668,7 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
           
           {/* Preferred Contact Method */}
           <div className="space-y-2">
-            <Label>Preferred contact method for your preview *</Label>
+            <Label>{t.preferredContact} *</Label>
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
@@ -396,8 +682,8 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
               >
                 <MessageCircle className="w-5 h-5 text-green-500" />
                 <div>
-                  <div className="font-medium text-slate-900 text-sm">WhatsApp</div>
-                  <div className="text-xs text-slate-500">Faster response</div>
+                  <div className="font-medium text-slate-900 text-sm">{t.whatsapp}</div>
+                  <div className="text-xs text-slate-500">{t.fasterResponse}</div>
                 </div>
               </button>
               <button
@@ -412,8 +698,8 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
               >
                 <Mail className="w-5 h-5 text-blue-500" />
                 <div>
-                  <div className="font-medium text-slate-900 text-sm">Email</div>
-                  <div className="text-xs text-slate-500">Traditional</div>
+                  <div className="font-medium text-slate-900 text-sm">{t.email}</div>
+                  <div className="text-xs text-slate-500">{t.traditional}</div>
                 </div>
               </button>
             </div>
@@ -421,7 +707,7 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
 
           {formData.preferred_contact === "whatsapp" && (
             <div className="space-y-2">
-              <Label htmlFor="phone">WhatsApp Number *</Label>
+              <Label htmlFor="phone">{t.whatsappNumber} *</Label>
               <Input
                 id="phone"
                 type="tel"
@@ -435,12 +721,12 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="message">Tell us about your project / work</Label>
+            <Label htmlFor="message">{t.projectWork}</Label>
             <Textarea
               id="message"
               value={formData.message}
               onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-              placeholder="Example: I'm looking for a modern, minimalist website for my consulting business with a booking system..."
+              placeholder={t.projectPlaceholder}
               rows={4}
               data-testid="lead-message-input"
               className="placeholder:text-slate-400 placeholder:italic"
@@ -452,7 +738,7 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
             disabled={isSubmitting}
             data-testid="lead-submit-btn"
           >
-            {isSubmitting ? "Submitting..." : "Get My Free Preview"}
+            {isSubmitting ? t.submitting : t.submit}
             <Sparkles className="ml-2 w-5 h-5" />
           </Button>
         </form>
@@ -463,6 +749,9 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
 
 // Navigation component
 const Navigation = ({ onOpenModal }) => {
+  const { language } = useLanguage();
+  const t = translations[language].nav;
+  
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -475,9 +764,9 @@ const Navigation = ({ onOpenModal }) => {
   }, []);
 
   const navLinks = [
-    { href: "#services", label: "Services" },
-    { href: "#portfolio", label: "Work" },
-    { href: "#process", label: "Process" },
+    { href: "#services", label: t.services },
+    { href: "#portfolio", label: t.work },
+    { href: "#process", label: t.process },
   ];
 
   return (
@@ -490,7 +779,12 @@ const Navigation = ({ onOpenModal }) => {
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="flex items-center justify-between h-20">
-          {/* Logo */}
+          {/* Language Switcher - Left side */}
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher />
+          </div>
+          
+          {/* Logo - Center */}
           <a href="#" className="flex items-center gap-3" data-testid="logo-link">
             <img 
               src={FALCON_LOGO} 
@@ -517,7 +811,7 @@ const Navigation = ({ onOpenModal }) => {
               onClick={onOpenModal}
               data-testid="nav-contact-btn"
             >
-              Get Started
+              {t.getStarted}
             </Button>
           </div>
 
@@ -559,7 +853,7 @@ const Navigation = ({ onOpenModal }) => {
                       onOpenModal();
                     }}
                   >
-                    Get Started
+                    {t.getStarted}
                   </Button>
                 </div>
               </div>
@@ -573,6 +867,9 @@ const Navigation = ({ onOpenModal }) => {
 
 // Hero Section
 const HeroSection = ({ onOpenModal }) => {
+  const { language } = useLanguage();
+  const t = translations[language].hero;
+  
   const handleGetFreeDemo = () => {
     // First scroll to CTA section
     document.getElementById('cta').scrollIntoView({ behavior: 'smooth' });
@@ -627,7 +924,7 @@ const HeroSection = ({ onOpenModal }) => {
             transition={{ duration: 0.8 }}
           >
             <span className="inline-block px-4 py-2 bg-slate-100 text-slate-600 text-sm font-medium rounded-full mb-6">
-              Premium Web Design Agency
+              {t.badge}
             </span>
           </motion.div>
 
@@ -638,10 +935,10 @@ const HeroSection = ({ onOpenModal }) => {
             className="text-5xl md:text-7xl font-bold tracking-tight text-slate-950 leading-[1.1] mb-8"
             data-testid="hero-headline"
           >
-            Websites That Turn{" "}
-            <span className="text-blue-500">Visitors</span> Into{" "}
+            {t.headline1}{" "}
+            <span className="text-blue-500">{t.headline2}</span> {t.headline3}{" "}
             <span className="relative">
-              Customers
+              {t.headline4}
               <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 300 12" fill="none">
                 <path d="M2 10C50 4 150 2 298 10" stroke="#3B82F6" strokeWidth="3" strokeLinecap="round"/>
               </svg>
@@ -655,8 +952,7 @@ const HeroSection = ({ onOpenModal }) => {
             className="text-lg md:text-xl text-slate-600 leading-relaxed mb-12 max-w-2xl"
             data-testid="hero-subtext"
           >
-            We design fast, modern websites for businesses that want to grow online. 
-            Precision-engineered digital experiences that convert.
+            {t.subtext}
           </motion.p>
 
           <motion.div
@@ -672,7 +968,7 @@ const HeroSection = ({ onOpenModal }) => {
               data-testid="hero-request-preview-btn"
             >
               <Sparkles className="mr-2 w-5 h-5" />
-              Request Free Website Preview
+              {t.ctaPreview}
             </Button>
             <Button
               size="lg"
@@ -681,7 +977,7 @@ const HeroSection = ({ onOpenModal }) => {
               onClick={() => document.getElementById('portfolio').scrollIntoView({ behavior: 'smooth' })}
               data-testid="hero-view-work-btn"
             >
-              View Our Work
+              {t.ctaWork}
               <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </motion.div>
@@ -693,7 +989,7 @@ const HeroSection = ({ onOpenModal }) => {
             transition={{ duration: 0.8, delay: 0.5 }}
             className="mt-16 pt-8 border-t border-slate-100"
           >
-            <p className="text-sm text-slate-500 mb-4">Trusted by innovative companies</p>
+            <p className="text-sm text-slate-500 mb-4">{t.trustedBy}</p>
             <div className="flex items-center gap-8 opacity-50">
               {["TechFlow", "Nexus", "Vertex", "Atlas"].map((company) => (
                 <span key={company} className="text-slate-400 font-semibold text-lg">{company}</span>
@@ -708,6 +1004,9 @@ const HeroSection = ({ onOpenModal }) => {
 
 // Services Section
 const ServicesSection = () => {
+  const { language } = useLanguage();
+  const t = translations[language].services;
+  
   return (
     <section id="services" className="py-24 md:py-32 bg-slate-50">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -719,18 +1018,18 @@ const ServicesSection = () => {
           className="text-center mb-16"
         >
           <span className="text-sm font-medium tracking-wide uppercase text-blue-500 mb-4 block">
-            Our Services
+            {t.badge}
           </span>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-slate-950 mb-6">
-            What We Do Best
+            {t.title}
           </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Specialized in creating high-performance websites that drive business growth
+            {t.subtitle}
           </p>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {servicesData.map((service, index) => (
+          {t.items.map((service, index) => (
             <motion.div
               key={service.title}
               initial={{ opacity: 0, y: 30 }}
@@ -741,7 +1040,9 @@ const ServicesSection = () => {
               data-testid={`service-card-${index}`}
             >
               <div className="w-14 h-14 bg-slate-950 rounded-xl flex items-center justify-center mb-6">
-                <service.icon className="w-7 h-7 text-white" />
+                {index === 0 && <Layout className="w-7 h-7 text-white" />}
+                {index === 1 && <RefreshCw className="w-7 h-7 text-white" />}
+                {index === 2 && <TrendingUp className="w-7 h-7 text-white" />}
               </div>
               <h3 className="text-2xl font-semibold text-slate-950 mb-4">{service.title}</h3>
               <p className="text-slate-600 leading-relaxed">{service.description}</p>
@@ -749,7 +1050,7 @@ const ServicesSection = () => {
                 href="#cta"
                 className="inline-flex items-center mt-6 text-blue-500 font-medium hover:text-blue-600 transition-colors"
               >
-                Learn more <ArrowRight className="ml-2 w-4 h-4" />
+                {t.learnMore} <ArrowRight className="ml-2 w-4 h-4" />
               </a>
             </motion.div>
           ))}
@@ -761,6 +1062,9 @@ const ServicesSection = () => {
 
 // Portfolio Section
 const PortfolioSection = () => {
+  const { language } = useLanguage();
+  const t = translations[language].portfolio;
+  
   return (
     <section id="portfolio" className="py-24 md:py-32 bg-white">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -773,14 +1077,14 @@ const PortfolioSection = () => {
         >
           <div>
             <span className="text-sm font-medium tracking-wide uppercase text-blue-500 mb-4 block">
-              Our Work
+              {t.badge}
             </span>
             <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-slate-950">
-              Selected Projects
+              {t.title}
             </h2>
           </div>
           <p className="text-lg text-slate-600 max-w-md mt-4 md:mt-0">
-            A showcase of our recent work for ambitious brands
+            {t.subtitle}
           </p>
         </motion.div>
 
@@ -814,6 +1118,9 @@ const PortfolioSection = () => {
 
 // Process Section
 const ProcessSection = () => {
+  const { language } = useLanguage();
+  const t = translations[language].process;
+  
   return (
     <section id="process" className="py-24 md:py-32 bg-slate-50">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -825,13 +1132,13 @@ const ProcessSection = () => {
           className="text-center mb-20"
         >
           <span className="text-sm font-medium tracking-wide uppercase text-blue-500 mb-4 block">
-            Our Process
+            {t.badge}
           </span>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-slate-950 mb-6">
-            How We Work
+            {t.title}
           </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            A proven methodology that delivers exceptional results every time
+            {t.subtitle}
           </p>
         </motion.div>
 
@@ -840,7 +1147,7 @@ const ProcessSection = () => {
           <div className="hidden md:block timeline-line" />
 
           <div className="grid md:grid-cols-4 gap-8 md:gap-4">
-            {processSteps.map((step, index) => (
+            {t.steps.map((step, index) => (
               <motion.div
                 key={step.number}
                 initial={{ opacity: 0, y: 30 }}
@@ -866,6 +1173,9 @@ const ProcessSection = () => {
 
 // Why Choose Us Section
 const WhyChooseUsSection = ({ onOpenModal }) => {
+  const { language } = useLanguage();
+  const t = translations[language].features;
+  
   return (
     <section id="features" className="py-24 md:py-32 bg-white">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -877,26 +1187,25 @@ const WhyChooseUsSection = ({ onOpenModal }) => {
             transition={{ duration: 0.6 }}
           >
             <span className="text-sm font-medium tracking-wide uppercase text-blue-500 mb-4 block">
-              Why Choose Us
+              {t.badge}
             </span>
             <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-slate-950 mb-6">
-              Built for Performance
+              {t.title}
             </h2>
             <p className="text-lg text-slate-600 leading-relaxed mb-8">
-              We don't just build websites — we engineer digital experiences that are fast, 
-              accessible, and designed to convert visitors into loyal customers.
+              {t.subtitle}
             </p>
             <Button
               className="btn-accent rounded-full px-8"
               onClick={onOpenModal}
               data-testid="features-cta-btn"
             >
-              Start Your Project <ArrowRight className="ml-2 w-5 h-5" />
+              {t.cta} <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </motion.div>
 
           <div className="grid sm:grid-cols-2 gap-6">
-            {featuresData.map((feature, index) => (
+            {t.items.map((feature, index) => (
               <motion.div
                 key={feature.title}
                 initial={{ opacity: 0, y: 30 }}
@@ -907,7 +1216,10 @@ const WhyChooseUsSection = ({ onOpenModal }) => {
                 data-testid={`feature-${index}`}
               >
                 <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center mb-4 shadow-sm">
-                  <feature.icon className="w-6 h-6 text-blue-500" />
+                  {index === 0 && <Zap className="w-6 h-6 text-blue-500" />}
+                  {index === 1 && <Smartphone className="w-6 h-6 text-blue-500" />}
+                  {index === 2 && <Search className="w-6 h-6 text-blue-500" />}
+                  {index === 3 && <BarChart className="w-6 h-6 text-blue-500" />}
                 </div>
                 <h3 className="text-lg font-semibold text-slate-950 mb-2">{feature.title}</h3>
                 <p className="text-sm text-slate-600">{feature.description}</p>
@@ -974,8 +1286,13 @@ const TestimonialsSection = () => {
 
 // CTA Section
 const CTASection = ({ onOpenModal }) => {
+  const { language } = useLanguage();
+  const t = translations[language].cta;
+  
   const handleWhatsApp = () => {
-    const message = encodeURIComponent("Hi, I'm interested in getting a free website demo from Falcon Web Studio.");
+    const message = encodeURIComponent(language === 'en'
+      ? "Hi, I'm interested in getting a free website demo from Falcon Web Studio."
+      : "Hej, jag är intresserad av att få en gratis webbdemo från Falcon Web Studio.");
     window.open(`https://wa.me/46735066026?text=${message}`, "_blank");
   };
 
@@ -989,14 +1306,13 @@ const CTASection = ({ onOpenModal }) => {
           transition={{ duration: 0.6 }}
         >
           <span className="inline-block px-4 py-2 bg-white/10 text-white/80 text-sm font-medium rounded-full mb-6">
-            Free Demo Offer
+            {t.badge}
           </span>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-white mb-6" data-testid="cta-headline">
-            Get Your Free Website Demo
+            {t.title}
           </h2>
           <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-10">
-            We will design a homepage preview for your business before you pay anything. 
-            No commitment, no risk.
+            {t.subtitle}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
@@ -1006,7 +1322,7 @@ const CTASection = ({ onOpenModal }) => {
               data-testid="cta-request-demo-btn"
             >
               <Sparkles className="mr-2 w-5 h-5" />
-              Request Free Website Preview
+              {t.ctaPreview}
             </Button>
             <Button
               size="lg"
@@ -1016,8 +1332,65 @@ const CTASection = ({ onOpenModal }) => {
               data-testid="cta-whatsapp-btn"
             >
               <MessageCircle className="mr-2 w-5 h-5" />
-              Chat on WhatsApp
+              {t.ctaWhatsapp}
             </Button>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+// Questions Section
+const QuestionsSection = () => {
+  const { language } = useLanguage();
+  const t = translations[language].questions;
+  
+  const handleWhatsApp = () => {
+    const message = encodeURIComponent(language === 'en' 
+      ? "Hi, I have a question about your web design services."
+      : "Hej, jag har en fråga om era webbdesigntjänster.");
+    window.open(`https://wa.me/46735066026?text=${message}`, "_blank");
+  };
+
+  return (
+    <section id="questions" className="py-16 bg-slate-50">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="bg-white rounded-2xl p-8 md:p-12 shadow-sm border border-slate-100"
+        >
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div>
+              <h3 className="text-2xl md:text-3xl font-semibold text-slate-950 mb-2">
+                {t.title}
+              </h3>
+              <p className="text-slate-600">
+                {t.subtitle}
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button
+                onClick={handleWhatsApp}
+                className="bg-green-500 hover:bg-green-600 text-white rounded-full px-6 py-5"
+                data-testid="questions-whatsapp-btn"
+              >
+                <MessageCircle className="mr-2 w-5 h-5" />
+                {t.whatsapp}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => window.location.href = "mailto:abbesalem977@gmail.com"}
+                className="rounded-full px-6 py-5 border-slate-300"
+                data-testid="questions-email-btn"
+              >
+                <Mail className="mr-2 w-5 h-5" />
+                {t.email}
+              </Button>
+            </div>
           </div>
         </motion.div>
       </div>
@@ -1027,6 +1400,9 @@ const CTASection = ({ onOpenModal }) => {
 
 // Footer
 const Footer = () => {
+  const { language } = useLanguage();
+  const t = translations[language].footer;
+  const tNav = translations[language].nav;
   const currentYear = new Date().getFullYear();
 
   return (
@@ -1049,7 +1425,7 @@ const Footer = () => {
               <span className="text-xl font-bold text-white font-['Outfit']">Falcon Web Studio</span>
             </div>
             <p className="text-slate-400 max-w-sm mb-6">
-              Premium web design agency crafting high-performance websites for businesses that want to grow online.
+              {t.description}
             </p>
             <div className="flex gap-4">
               <a
@@ -1091,37 +1467,42 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Quick Links</h4>
+            <h4 className="text-white font-semibold mb-4">{t.quickLinks}</h4>
             <ul className="space-y-3">
-              {["Services", "Portfolio", "Process"].map((link) => (
-                <li key={link}>
-                  <a
-                    href={`#${link.toLowerCase()}`}
-                    className="text-slate-400 hover:text-white transition-colors"
-                  >
-                    {link}
-                  </a>
-                </li>
-              ))}
+              <li>
+                <a href="#services" className="text-slate-400 hover:text-white transition-colors">
+                  {tNav.services}
+                </a>
+              </li>
+              <li>
+                <a href="#portfolio" className="text-slate-400 hover:text-white transition-colors">
+                  {tNav.work}
+                </a>
+              </li>
+              <li>
+                <a href="#process" className="text-slate-400 hover:text-white transition-colors">
+                  {tNav.process}
+                </a>
+              </li>
             </ul>
           </div>
 
           {/* Contact */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Contact</h4>
+            <h4 className="text-white font-semibold mb-4">{t.contact}</h4>
             <ul className="space-y-3 text-slate-400">
               <li>abbesalem977@gmail.com</li>
-              <li>WhatsApp Available</li>
+              <li>{t.whatsappAvailable}</li>
             </ul>
           </div>
         </div>
 
         <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-slate-500 text-sm">
-            © {currentYear} Falcon Web Studio. All rights reserved.
+            © {currentYear} Falcon Web Studio. {t.rights}
           </p>
           <p className="text-slate-500 text-sm">
-            Designed with precision. Built for performance.
+            {t.tagline}
           </p>
         </div>
       </div>
@@ -1129,77 +1510,28 @@ const Footer = () => {
   );
 };
 
-// Questions Section
-const QuestionsSection = () => {
-  const handleWhatsApp = () => {
-    const message = encodeURIComponent("Hi, I have a question about your web design services.");
-    window.open(`https://wa.me/46735066026?text=${message}`, "_blank");
-  };
-
-  return (
-    <section id="questions" className="py-16 bg-slate-50">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="bg-white rounded-2xl p-8 md:p-12 shadow-sm border border-slate-100"
-        >
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <div>
-              <h3 className="text-2xl md:text-3xl font-semibold text-slate-950 mb-2">
-                Questions?
-              </h3>
-              <p className="text-slate-600">
-                We're here to help. Reach out anytime — no pressure, no obligations.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button
-                onClick={handleWhatsApp}
-                className="bg-green-500 hover:bg-green-600 text-white rounded-full px-6 py-5"
-                data-testid="questions-whatsapp-btn"
-              >
-                <MessageCircle className="mr-2 w-5 h-5" />
-                Chat on WhatsApp
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => window.location.href = "mailto:abbesalem977@gmail.com"}
-                className="rounded-full px-6 py-5 border-slate-300"
-                data-testid="questions-email-btn"
-              >
-                <Mail className="mr-2 w-5 h-5" />
-                Send Email
-              </Button>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
 // Main App
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [language, setLanguage] = useState('en');
 
   return (
-    <div className="App">
-      <Toaster position="top-center" richColors />
-      <FlyingFalcon />
-      <Navigation onOpenModal={() => setIsModalOpen(true)} />
-      <HeroSection onOpenModal={() => setIsModalOpen(true)} />
-      <ServicesSection />
-      <PortfolioSection />
-      <ProcessSection />
-      <WhyChooseUsSection onOpenModal={() => setIsModalOpen(true)} />
-      <QuestionsSection />
-      <CTASection onOpenModal={() => setIsModalOpen(true)} />
-      <Footer />
-      <LeadCaptureModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-    </div>
+    <LanguageContext.Provider value={{ language, setLanguage }}>
+      <div className="App">
+        <Toaster position="top-center" richColors />
+        <FlyingFalcon />
+        <Navigation onOpenModal={() => setIsModalOpen(true)} />
+        <HeroSection onOpenModal={() => setIsModalOpen(true)} />
+        <ServicesSection />
+        <PortfolioSection />
+        <ProcessSection />
+        <WhyChooseUsSection onOpenModal={() => setIsModalOpen(true)} />
+        <QuestionsSection />
+        <CTASection onOpenModal={() => setIsModalOpen(true)} />
+        <Footer />
+        <LeadCaptureModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      </div>
+    </LanguageContext.Provider>
   );
 }
 
