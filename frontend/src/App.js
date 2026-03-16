@@ -148,9 +148,14 @@ const FlyingFalcon = () => {
   ]);
   
   // Bird rotation based on direction of horizontal movement
-  // When going right (increasing x), tilt right; when going left, tilt left
   const bodyRotate = useTransform(scrollYProgress, [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1], 
-    [0, 20, 15, -20, -15, 20, 15, -15, 0]
+    [0, 15, 10, -15, -10, 15, 10, -10, 0]
+  );
+  
+  // Flip bird horizontally based on direction (1 = facing right, -1 = facing left)
+  // Going right: 0->0.25, 0.5->0.75 | Going left: 0.25->0.5, 0.75->1
+  const flipX = useTransform(scrollYProgress, [0, 0.24, 0.26, 0.49, 0.51, 0.74, 0.76, 1], 
+    [1, 1, -1, -1, 1, 1, -1, -1]
   );
   
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1.5, 1]);
@@ -166,7 +171,6 @@ const FlyingFalcon = () => {
   const wingFlapVariants = {
     flying: {
       scaleY: [1, 0.85, 1, 1.1, 1],
-      scaleX: [1, 1.05, 1, 0.95, 1],
       transition: {
         duration: 0.4,
         repeat: Infinity,
@@ -190,6 +194,7 @@ const FlyingFalcon = () => {
       <motion.div
         style={{ 
           rotate: bodyRotate,
+          scaleX: flipX,
           originX: 0.5,
           originY: 0.5,
         }}
