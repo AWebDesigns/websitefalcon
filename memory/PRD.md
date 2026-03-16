@@ -38,6 +38,11 @@ Create a modern high-end website for a web design agency called Falcon Web Studi
 - [x] Framer Motion animations throughout
 - [x] Mobile responsive design
 - [x] Custom fonts (Outfit + Inter)
+- [x] Custom falcon logo from uploaded image
+- [x] Lead capture modal form (stores in MongoDB)
+- [x] "Request Free Website Preview" buttons throughout site
+- [x] Flying falcon scroll animation (flies down/up with scroll)
+- [x] Backend API endpoints for lead management (POST/GET /api/leads)
 
 ## Prioritized Backlog
 
@@ -49,9 +54,10 @@ Create a modern high-end website for a web design agency called Falcon Web Studi
 
 ### P1 (Next Phase)
 - Replace portfolio images with user's own work
-- Add actual WhatsApp number
-- Create custom email address
+- Add actual WhatsApp number to all WhatsApp links
+- Create custom email address (hello@falconwebstudio.com)
 - Add Google Analytics
+- Admin dashboard to view leads
 
 ### P2 (Future)
 - Blog section
