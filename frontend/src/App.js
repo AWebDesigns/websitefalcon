@@ -234,7 +234,7 @@ const translations = {
       subtitle: "Vi bygger inte bara webbplatser — vi skapar digitala upplevelser som är snabba, tillgängliga och designade för att konvertera besökare till lojala kunder.",
       cta: "Starta ditt projekt",
       items: [
-        { title: "Snabb leverans", description: "Projekt levererade på 2-4 veckor" },
+        { title: "Snabb leverans", description: "Inom 2 veckor" },
         { title: "Mobiloptimerad", description: "Felfri på alla enheter" },
         { title: "SEO-redo", description: "Byggd för att ranka på sökmotorer" },
         { title: "Konverteringsfokuserad", description: "Designad för att driva resultat" },
