@@ -10,6 +10,8 @@ from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
 import hashlib
+import asyncio
+import resend
 
 
 ROOT_DIR = Path(__file__).parent
@@ -22,6 +24,12 @@ db = client[os.environ['DB_NAME']]
 
 # Admin password
 ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'falcon2024admin')
+
+# Resend email configuration
+RESEND_API_KEY = os.environ.get('RESEND_API_KEY')
+NOTIFICATION_EMAIL = os.environ.get('NOTIFICATION_EMAIL', 'abbesalem977@gmail.com')
+if RESEND_API_KEY:
+    resend.api_key = RESEND_API_KEY
 
 # Create the main app without a prefix
 app = FastAPI()
@@ -103,6 +111,79 @@ async def get_status_checks():
     
     return status_checks
 
+# Email notification function
+async def send_lead_notification(lead: Lead):
+    """Send email notification when a new lead is created"""
+    if not RESEND_API_KEY:
+        logger.warning("RESEND_API_KEY not configured, skipping email notification")
+        return
+    
+    project_type_text = "New Website" if lead.project_type == "new_website" else "Redesign / Fix" if lead.project_type == "fix_existing" else lead.project_type or "Not specified"
+    contact_method = lead.preferred_contact or "Not specified"
+    
+    html_content = f"""
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="background: #0f172a; padding: 20px; border-radius: 10px 10px 0 0;">
+            <h1 style="color: white; margin: 0; font-size: 24px;">🦅 New Lead Received!</h1>
+        </div>
+        <div style="background: #f8fafc; padding: 20px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 10px 10px;">
+            <h2 style="color: #0f172a; margin-top: 0;">Contact Information</h2>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #64748b; width: 140px;">Name:</td>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a; font-weight: bold;">{lead.name}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Email:</td>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a;">{lead.email}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Phone:</td>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a;">{lead.phone or 'Not provided'}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Business:</td>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a;">{lead.business_name or 'Not provided'}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Website:</td>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a;">{lead.website_url or 'Not provided'}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Project Type:</td>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #3b82f6; font-weight: bold;">{project_type_text}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #64748b;">Prefers:</td>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #0f172a;">{contact_method.capitalize()}</td>
+                </tr>
+            </table>
+            
+            {f'<div style="margin-top: 20px; padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #3b82f6;"><strong>Message:</strong><br/><p style="margin: 10px 0 0 0; color: #475569;">{lead.message}</p></div>' if lead.message else ''}
+            
+            <div style="margin-top: 20px; padding: 15px; background: #0f172a; border-radius: 8px; text-align: center;">
+                <a href="https://falcon-studio.preview.emergentagent.com/admin" style="color: white; text-decoration: none; font-weight: bold;">View in Admin Dashboard →</a>
+            </div>
+        </div>
+        <p style="color: #94a3b8; font-size: 12px; text-align: center; margin-top: 20px;">
+            Falcon Web Studio - Lead Notification
+        </p>
+    </div>
+    """
+    
+    params = {
+        "from": "Falcon Web Studio <onboarding@resend.dev>",
+        "to": [NOTIFICATION_EMAIL],
+        "subject": f"🦅 New Lead: {lead.name} - {project_type_text}",
+        "html": html_content
+    }
+    
+    try:
+        email = await asyncio.to_thread(resend.Emails.send, params)
+        logger.info(f"Notification email sent for lead: {lead.email}, email_id: {email.get('id')}")
+    except Exception as e:
+        logger.error(f"Failed to send notification email: {str(e)}")
+
 # Lead capture endpoints
 @api_router.post("/leads", response_model=Lead)
 async def create_lead(input: LeadCreate):
@@ -116,6 +197,10 @@ async def create_lead(input: LeadCreate):
     
     await db.leads.insert_one(doc)
     logger.info(f"New lead created: {lead_obj.email}")
+    
+    # Send email notification (non-blocking)
+    asyncio.create_task(send_lead_notification(lead_obj))
+    
     return lead_obj
 
 @api_router.get("/leads", response_model=List[Lead])
