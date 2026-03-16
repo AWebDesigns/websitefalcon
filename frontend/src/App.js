@@ -134,6 +134,7 @@ const FlyingFalcon = () => {
   const { scrollYProgress } = useScroll();
   const [windowHeight, setWindowHeight] = useState(800);
   const [scrollDirection, setScrollDirection] = useState('down');
+  const [flipX, setFlipX] = useState(1);
   const lastScrollY = useRef(0);
   
   useEffect(() => {
@@ -143,15 +144,29 @@ const FlyingFalcon = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  // Track scroll direction
+  // Track scroll direction and calculate flip
   useEffect(() => {
     const unsubscribe = scrollYProgress.on('change', (latest) => {
+      // Determine scroll direction
+      const isScrollingUp = latest < lastScrollY.current;
       if (latest > lastScrollY.current) {
         setScrollDirection('down');
       } else if (latest < lastScrollY.current) {
         setScrollDirection('up');
       }
       lastScrollY.current = latest;
+      
+      // Determine path direction (which way falcon is moving horizontally)
+      // Path: 10vw -> 60vw -> 30vw -> 70vw -> 50vw
+      // Going right: 0-0.25, 0.5-0.75 | Going left: 0.25-0.5, 0.75-1
+      let pathFlip = 1;
+      if ((latest > 0.25 && latest <= 0.5) || (latest > 0.75 && latest <= 1)) {
+        pathFlip = -1; // Going left
+      }
+      
+      // Combine: scroll up reverses, path direction applies
+      const scrollFlip = isScrollingUp ? -1 : 1;
+      setFlipX(pathFlip * scrollFlip);
     });
     return () => unsubscribe();
   }, [scrollYProgress]);
@@ -207,7 +222,7 @@ const FlyingFalcon = () => {
           originY: 0.5,
         }}
         animate={{
-          scaleX: scrollDirection === 'up' ? -1 : 1,
+          scaleX: flipX,
         }}
         transition={{
           scaleX: { duration: 0.3, ease: "easeInOut" }
