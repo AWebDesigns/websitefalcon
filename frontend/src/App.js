@@ -38,7 +38,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 // Falcon logo URLs
-const FALCON_LOGO = "https://customer-assets.emergentagent.com/job_falcon-studio/artifacts/gj7z2aki_image.png";
+const FALCON_LOGO = "https://customer-assets.emergentagent.com/job_falcon-studio/artifacts/vou21f5x_image.png";
 const FALCON_FLYING = "https://customer-assets.emergentagent.com/job_falcon-studio/artifacts/3pq6tkx5_image.png";
 
 // Language Context
