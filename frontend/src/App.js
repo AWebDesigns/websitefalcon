@@ -213,10 +213,10 @@ const FlyingFalcon = () => {
           originY: 0.5,
         }}
         animate={{
-          scaleY: scrollDirection === 'up' ? -1 : 1,
+          scaleX: scrollDirection === 'up' ? -1 : 1,
         }}
         transition={{
-          scaleY: { duration: 0.3, ease: "easeInOut" }
+          scaleX: { duration: 0.3, ease: "easeInOut" }
         }}
       >
         <motion.img 
