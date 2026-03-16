@@ -172,13 +172,13 @@ const FlyingFalcon = () => {
     [1, 1, -1, -1, 1, 1, -1, -1]
   );
   
-  // Combined flip: path direction + scroll direction (up reverses it)
+  // Combined flip: path direction + scroll direction (down reverses it)
   const [combinedFlipX, setCombinedFlipX] = useState(1);
   
   useEffect(() => {
     const unsubscribe = pathFlipX.on('change', (pathValue) => {
-      // When scrolling up, reverse the horizontal direction
-      const directionMultiplier = scrollDirection === 'up' ? -1 : 1;
+      // When scrolling down, reverse the horizontal direction
+      const directionMultiplier = scrollDirection === 'down' ? -1 : 1;
       setCombinedFlipX(pathValue * directionMultiplier);
     });
     return () => unsubscribe();
