@@ -133,6 +133,8 @@ const featuresData = [
 const FlyingFalcon = () => {
   const { scrollYProgress } = useScroll();
   const [windowHeight, setWindowHeight] = useState(800);
+  const [scrollDirection, setScrollDirection] = useState('down');
+  const lastScrollY = useRef(0);
   
   useEffect(() => {
     setWindowHeight(window.innerHeight);
@@ -140,6 +142,19 @@ const FlyingFalcon = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+  
+  // Track scroll direction
+  useEffect(() => {
+    const unsubscribe = scrollYProgress.on('change', (latest) => {
+      if (latest > lastScrollY.current) {
+        setScrollDirection('down');
+      } else if (latest < lastScrollY.current) {
+        setScrollDirection('up');
+      }
+      lastScrollY.current = latest;
+    });
+    return () => unsubscribe();
+  }, [scrollYProgress]);
   
   // Transform scroll progress to position - flies across the page
   const y = useTransform(scrollYProgress, [0, 1], [100, windowHeight - 200]);
@@ -153,7 +168,6 @@ const FlyingFalcon = () => {
   );
   
   // Flip bird horizontally based on direction (1 = facing right, -1 = facing left)
-  // Going right: 0->0.25, 0.5->0.75 | Going left: 0.25->0.5, 0.75->1
   const flipX = useTransform(scrollYProgress, [0, 0.24, 0.26, 0.49, 0.51, 0.74, 0.76, 1], 
     [1, 1, -1, -1, 1, 1, -1, -1]
   );
@@ -197,6 +211,12 @@ const FlyingFalcon = () => {
           scaleX: flipX,
           originX: 0.5,
           originY: 0.5,
+        }}
+        animate={{
+          scaleY: scrollDirection === 'up' ? -1 : 1,
+        }}
+        transition={{
+          scaleY: { duration: 0.3, ease: "easeInOut" }
         }}
       >
         <motion.img 
