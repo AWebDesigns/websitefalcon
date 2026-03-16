@@ -129,7 +129,7 @@ const featuresData = [
   { icon: BarChart, title: "Conversion Focused", description: "Designed to drive results" },
 ];
 
-// Flying Falcon Component - follows scroll in background
+// Flying Falcon Component - follows scroll in background with wing animation
 const FlyingFalcon = () => {
   const { scrollYProgress } = useScroll();
   const [windowHeight, setWindowHeight] = useState(800);
@@ -146,15 +146,34 @@ const FlyingFalcon = () => {
   const x = useTransform(scrollYProgress, [0, 0.25, 0.5, 0.75, 1], [
     '10vw', '60vw', '30vw', '70vw', '50vw'
   ]);
-  const rotate = useTransform(scrollYProgress, [0, 0.25, 0.5, 0.75, 1], [0, 15, -10, 20, 0]);
+  
+  // Bird rotation based on direction of horizontal movement
+  // When going right (increasing x), tilt right; when going left, tilt left
+  const bodyRotate = useTransform(scrollYProgress, [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1], 
+    [0, 20, 15, -20, -15, 20, 15, -15, 0]
+  );
+  
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1.5, 1]);
   
   // Opacity - visible only in the middle of scroll, fades at edges
-  const opacity = useTransform(scrollYProgress, [0, 0.08, 0.92, 1], [0, 0.15, 0.15, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.08, 0.92, 1], [0, 0.2, 0.2, 0]);
   
   // Switch between sitting logo and flying falcon based on scroll
   const flyingOpacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [0, 1, 1, 0]);
   const sittingOpacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [1, 0, 0, 1]);
+
+  // Wing flapping animation variants
+  const wingFlapVariants = {
+    flying: {
+      scaleY: [1, 0.85, 1, 1.1, 1],
+      scaleX: [1, 1.05, 1, 0.95, 1],
+      transition: {
+        duration: 0.4,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }
+    }
+  };
 
   return (
     <motion.div
@@ -162,22 +181,31 @@ const FlyingFalcon = () => {
       style={{
         y,
         x,
-        rotate,
         scale,
         opacity,
-        zIndex: 5, // Behind content but above background
+        zIndex: 5,
       }}
     >
-      {/* Flying falcon - visible during scroll */}
-      <motion.img 
-        src={FALCON_FLYING} 
-        alt="Flying Falcon" 
-        className="w-32 h-32 md:w-48 md:h-48 object-contain"
+      {/* Flying falcon with wing animation - visible during scroll */}
+      <motion.div
         style={{ 
-          opacity: flyingOpacity,
-          filter: 'drop-shadow(0 8px 30px rgba(0,0,0,0.2))',
+          rotate: bodyRotate,
+          originX: 0.5,
+          originY: 0.5,
         }}
-      />
+      >
+        <motion.img 
+          src={FALCON_FLYING} 
+          alt="Flying Falcon" 
+          className="w-32 h-32 md:w-48 md:h-48 object-contain"
+          style={{ 
+            opacity: flyingOpacity,
+            filter: 'drop-shadow(0 8px 30px rgba(0,0,0,0.2))',
+          }}
+          variants={wingFlapVariants}
+          animate="flying"
+        />
+      </motion.div>
       {/* Sitting falcon - visible at start and end */}
       <motion.img 
         src={FALCON_LOGO} 
