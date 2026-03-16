@@ -133,6 +133,8 @@ const featuresData = [
 const FlyingFalcon = () => {
   const { scrollYProgress } = useScroll();
   const [windowHeight, setWindowHeight] = useState(800);
+  const [scrollDirection, setScrollDirection] = useState('down');
+  const lastScrollY = useRef(0);
   
   useEffect(() => {
     setWindowHeight(window.innerHeight);
@@ -140,6 +142,19 @@ const FlyingFalcon = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+  
+  // Track scroll direction
+  useEffect(() => {
+    const unsubscribe = scrollYProgress.on('change', (latest) => {
+      if (latest > lastScrollY.current) {
+        setScrollDirection('down');
+      } else if (latest < lastScrollY.current) {
+        setScrollDirection('up');
+      }
+      lastScrollY.current = latest;
+    });
+    return () => unsubscribe();
+  }, [scrollYProgress]);
   
   // Transform scroll progress to position - flies across the page
   const y = useTransform(scrollYProgress, [0, 1], [100, windowHeight - 200]);
@@ -190,6 +205,12 @@ const FlyingFalcon = () => {
           rotate: bodyRotate,
           originX: 0.5,
           originY: 0.5,
+        }}
+        animate={{
+          scaleX: scrollDirection === 'up' ? -1 : 1,
+        }}
+        transition={{
+          scaleX: { duration: 0.3, ease: "easeInOut" }
         }}
       >
         <motion.img 
