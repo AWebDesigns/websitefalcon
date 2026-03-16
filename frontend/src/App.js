@@ -39,7 +39,7 @@ const API = `${BACKEND_URL}/api`;
 
 // Falcon logo URLs
 const FALCON_LOGO = "https://customer-assets.emergentagent.com/job_falcon-studio/artifacts/lbmevzfg_image.png";
-const FALCON_FLYING = "https://customer-assets.emergentagent.com/job_falcon-studio/artifacts/wwc81btc_image.png";
+const FALCON_FLYING = "https://customer-assets.emergentagent.com/job_falcon-studio/artifacts/3pq6tkx5_image.png";
 
 // Portfolio data
 const portfolioData = [
