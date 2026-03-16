@@ -1,0 +1,161 @@
+{
+  "identity": {
+    "name": "Falcon Web Studio",
+    "mission": "Minimalist digital agency crafting high-performance websites.",
+    "aesthetics": "Scandinavian Minimalist, Geometric, Precision-focused.",
+    "archetype": "The Electric Precision (Stripe/Linear/Vercel Vibe)"
+  },
+  "visual_system": {
+    "colors": {
+      "palette": {
+        "primary": "#0F172A",
+        "secondary": "#334155",
+        "accent": "#3B82F6",
+        "background": "#FFFFFF",
+        "surface": "#F8FAFC",
+        "border": "#E2E8F0",
+        "text_primary": "#020617",
+        "text_secondary": "#64748B"
+      },
+      "usage": {
+        "body_bg": "bg-white",
+        "text_main": "text-slate-950",
+        "text_muted": "text-slate-500",
+        "primary_btn": "bg-slate-950 text-white hover:bg-slate-800",
+        "accent_element": "text-blue-500",
+        "border_subtle": "border-slate-100"
+      }
+    },
+    "typography": {
+      "font_family": {
+        "headings": "Outfit, sans-serif",
+        "body": "Inter, sans-serif"
+      },
+      "scale": {
+        "h1": "text-5xl md:text-7xl font-bold tracking-tight",
+        "h2": "text-3xl md:text-5xl font-semibold tracking-tight",
+        "h3": "text-2xl font-medium",
+        "body_lg": "text-lg md:text-xl leading-relaxed",
+        "body_base": "text-base leading-relaxed text-slate-600",
+        "caption": "text-sm font-medium tracking-wide uppercase text-slate-500"
+      },
+      "import_url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&display=swap"
+    },
+    "spacing": {
+      "section_padding": "py-24 md:py-32",
+      "container_padding": "px-6 md:px-12",
+      "element_gap": "gap-8 md:gap-12"
+    },
+    "effects": {
+      "glass": "bg-white/80 backdrop-blur-md border border-white/20",
+      "shadow_card": "shadow-[0_2px_40px_-12px_rgba(0,0,0,0.1)]",
+      "gradient_text": "bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent",
+      "gradient_blue": "bg-gradient-to-r from-blue-600 to-blue-400"
+    }
+  },
+  "layout_strategy": {
+    "grid_system": "Use CSS Grid for bento-style layouts (12 columns on desktop).",
+    "alignment": "Left-aligned typography for readability, centered containers for structural balance.",
+    "containers": "max-w-7xl mx-auto"
+  },
+  "components": {
+    "hero": {
+      "structure": "Split layout or centered text with floating geometric falcon elements.",
+      "elements": [
+        "Headline: 'Websites That Turn Visitors Into Customers'",
+        "Subheadline: 'Precision-engineered digital experiences for modern brands.'",
+        "CTA Button: 'Start Your Project'",
+        "Visual: Animated geometric shapes (triangles/polygons) forming an abstract falcon wing or eye."
+      ]
+    },
+    "services": {
+      "layout": "3-column grid (Bento style).",
+      "items": [
+        {
+          "title": "Website Design",
+          "icon": "Layout",
+          "desc": "Custom UI/UX design tailored to your brand identity."
+        },
+        {
+          "title": "Website Redesign",
+          "icon": "RefreshCw",
+          "desc": "Modernizing legacy sites for better performance and aesthetics."
+        },
+        {
+          "title": "Conversion Optimization",
+          "icon": "TrendingUp",
+          "desc": "Data-driven strategies to turn traffic into revenue."
+        }
+      ]
+    },
+    "portfolio": {
+      "layout": "2x2 Masonry or Grid.",
+      "interaction": "Image scale on hover + Overlay with Client Name and Role.",
+      "data_source": "image_urls.portfolio"
+    },
+    "process": {
+      "layout": "Horizontal step timeline with connecting lines.",
+      "steps": ["Strategy", "Design", "Development", "Launch"]
+    },
+    "why_us": {
+      "layout": "Feature list with minimalist icons.",
+      "points": ["Fast Delivery", "Mobile Optimized", "SEO Ready", "Conversion Focused"]
+    },
+    "testimonials": {
+      "layout": "Carousel using Embla Carousel.",
+      "style": "Minimalist cards, large quote marks."
+    },
+    "cta": {
+      "style": "Full-width dark section or gradient electric blue.",
+      "content": "Get Your Free Website Demo"
+    },
+    "footer": {
+      "style": "Simple multi-column with logo and links.",
+      "socials": ["WhatsApp", "Email", "LinkedIn", "Twitter"]
+    }
+  },
+  "assets": {
+    "image_urls": {
+      "portfolio": [
+        "https://images.unsplash.com/photo-1663177320254-51b22caf9ebd?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1641567535859-c58187ac4954?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1735399976112-17508533c97a?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1717994818193-266ff93e3396?auto=format&fit=crop&w=800&q=80"
+      ],
+      "people": [
+        "https://images.unsplash.com/photo-1758518731468-98e90ffd7430?auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1650784854945-264d5b0b6b07?auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1650784855038-9f4d5ed154a9?auto=format&fit=crop&w=400&q=80"
+      ],
+      "office": [
+        "https://images.unsplash.com/photo-1758630737361-ca7532fb5e7f?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1696453423495-046a7d83bf55?auto=format&fit=crop&w=1200&q=80"
+      ]
+    },
+    "icons": "Lucide React (Layout, RefreshCw, TrendingUp, Zap, Smartphone, Search, BarChart, ChevronRight, Menu, X, ArrowRight)"
+  },
+  "technical_guidelines": {
+    "framework": "React 19",
+    "styling": "Tailwind CSS",
+    "animation_library": "framer-motion (Recommended) or tailwindcss-animate",
+    "icons_library": "lucide-react",
+    "carousel_library": "embla-carousel-react",
+    "universal_rules": [
+      "Don't make generic centered layouts.",
+      "Create depth through layered design elements.",
+      "Use glass-morphism effects with backdrop filters.",
+      "Every interaction needs micro-animations.",
+      "Use 2-3x more spacing than feels comfortable.",
+      "Interactive elements MUST include data-testid attribute."
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Install framer-motion: `yarn add framer-motion` (CRITICAL for smooth animations).",
+    "Import font in `src/index.css` or `public/index.html`.",
+    "Create a `Layout` component that wraps the page with smooth scroll behavior if possible, or just standard structure.",
+    "Implement the 'Geometric Falcon' as a CSS/SVG composition in the Hero background.",
+    "Use `embla-carousel-react` for the Testimonials section.",
+    "Ensure the WhatsApp link uses the format `https://wa.me/`.",
+    "Prioritize the 'Electric Blue' (#3B82F6) for primary actions and accents only. Don't overuse it."
+  ]
+}
