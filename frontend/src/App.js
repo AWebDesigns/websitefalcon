@@ -262,6 +262,9 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
     business_name: "",
     website_url: "",
     message: "",
+    project_type: "",
+    preferred_contact: "whatsapp",
+    phone: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -272,7 +275,7 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
     try {
       await axios.post(`${API}/leads`, formData);
       toast.success("Request submitted! We'll be in touch within 24 hours.");
-      setFormData({ name: "", email: "", business_name: "", website_url: "", message: "" });
+      setFormData({ name: "", email: "", business_name: "", website_url: "", message: "", project_type: "", preferred_contact: "whatsapp", phone: "" });
       onClose();
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
@@ -284,7 +287,7 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg bg-white" data-testid="lead-modal">
+      <DialogContent className="sm:max-w-lg bg-white max-h-[90vh] overflow-y-auto" data-testid="lead-modal">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-slate-950 font-['Outfit']">
             Request Free Website Preview
@@ -294,6 +297,41 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+          {/* Project Type Selection */}
+          <div className="space-y-2">
+            <Label>What do you need? *</Label>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, project_type: "new_website" })}
+                className={`p-4 rounded-xl border-2 text-left transition-all ${
+                  formData.project_type === "new_website" 
+                    ? "border-blue-500 bg-blue-50" 
+                    : "border-slate-200 hover:border-slate-300"
+                }`}
+                data-testid="project-type-new"
+              >
+                <Layout className="w-6 h-6 text-blue-500 mb-2" />
+                <div className="font-medium text-slate-900">New Website</div>
+                <div className="text-sm text-slate-500">Build from scratch</div>
+              </button>
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, project_type: "fix_existing" })}
+                className={`p-4 rounded-xl border-2 text-left transition-all ${
+                  formData.project_type === "fix_existing" 
+                    ? "border-blue-500 bg-blue-50" 
+                    : "border-slate-200 hover:border-slate-300"
+                }`}
+                data-testid="project-type-fix"
+              >
+                <RefreshCw className="w-6 h-6 text-blue-500 mb-2" />
+                <div className="font-medium text-slate-900">Fix / Redesign</div>
+                <div className="text-sm text-slate-500">Improve existing site</div>
+              </button>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="name">Your Name *</Label>
@@ -341,13 +379,72 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
               />
             </div>
           </div>
+          
+          {/* Preferred Contact Method */}
           <div className="space-y-2">
-            <Label htmlFor="message">Tell us about your project</Label>
+            <Label>Preferred contact method for your preview *</Label>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, preferred_contact: "whatsapp" })}
+                className={`p-3 rounded-xl border-2 flex items-center gap-3 transition-all ${
+                  formData.preferred_contact === "whatsapp" 
+                    ? "border-blue-500 bg-blue-50" 
+                    : "border-slate-200 hover:border-slate-300"
+                }`}
+                data-testid="contact-whatsapp"
+              >
+                <MessageCircle className="w-5 h-5 text-green-500" />
+                <div>
+                  <div className="font-medium text-slate-900 text-sm">WhatsApp</div>
+                  <div className="text-xs text-slate-500">Faster response</div>
+                </div>
+              </button>
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, preferred_contact: "email" })}
+                className={`p-3 rounded-xl border-2 flex items-center gap-3 transition-all ${
+                  formData.preferred_contact === "email" 
+                    ? "border-blue-500 bg-blue-50" 
+                    : "border-slate-200 hover:border-slate-300"
+                }`}
+                data-testid="contact-email"
+              >
+                <Mail className="w-5 h-5 text-blue-500" />
+                <div>
+                  <div className="font-medium text-slate-900 text-sm">Email</div>
+                  <div className="text-xs text-slate-500">Traditional</div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {formData.preferred_contact === "whatsapp" && (
+            <div className="space-y-2">
+              <Label htmlFor="phone">WhatsApp Number *</Label>
+              <Input
+                id="phone"
+                type="tel"
+                required={formData.preferred_contact === "whatsapp"}
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                placeholder="+1 234 567 8900"
+                data-testid="lead-phone-input"
+              />
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <Label htmlFor="message">Tell us about your project / work</Label>
             <Textarea
               id="message"
               value={formData.message}
               onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-              placeholder="What does your business do? What are your goals for the website?"
+              placeholder="Example: I'm looking for a modern, minimalist website for my consulting business with a booking system..."
+              rows={4}
+              data-testid="lead-message-input"
+              className="placeholder:text-slate-400 placeholder:italic"
+            />
               rows={4}
               data-testid="lead-message-input"
             />
@@ -384,7 +481,6 @@ const Navigation = ({ onOpenModal }) => {
     { href: "#services", label: "Services" },
     { href: "#portfolio", label: "Work" },
     { href: "#process", label: "Process" },
-    { href: "#testimonials", label: "Testimonials" },
   ];
 
   return (
@@ -480,6 +576,15 @@ const Navigation = ({ onOpenModal }) => {
 
 // Hero Section
 const HeroSection = ({ onOpenModal }) => {
+  const handleGetFreeDemo = () => {
+    // First scroll to CTA section
+    document.getElementById('cta').scrollIntoView({ behavior: 'smooth' });
+    // Then open modal after scroll completes
+    setTimeout(() => {
+      onOpenModal();
+    }, 800);
+  };
+
   return (
     <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-white">
       {/* Geometric Background Elements */}
@@ -566,7 +671,7 @@ const HeroSection = ({ onOpenModal }) => {
             <Button
               size="lg"
               className="btn-accent rounded-full px-8 py-6 text-base font-medium group"
-              onClick={onOpenModal}
+              onClick={handleGetFreeDemo}
               data-testid="hero-request-preview-btn"
             >
               <Sparkles className="mr-2 w-5 h-5" />
@@ -991,7 +1096,7 @@ const Footer = () => {
           <div>
             <h4 className="text-white font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-3">
-              {["Services", "Portfolio", "Process", "Testimonials"].map((link) => (
+              {["Services", "Portfolio", "Process"].map((link) => (
                 <li key={link}>
                   <a
                     href={`#${link.toLowerCase()}`}
@@ -1027,6 +1132,58 @@ const Footer = () => {
   );
 };
 
+// Questions Section
+const QuestionsSection = () => {
+  const handleWhatsApp = () => {
+    const message = encodeURIComponent("Hi, I have a question about your web design services.");
+    window.open(`https://wa.me/?text=${message}`, "_blank");
+  };
+
+  return (
+    <section id="questions" className="py-16 bg-slate-50">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="bg-white rounded-2xl p-8 md:p-12 shadow-sm border border-slate-100"
+        >
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div>
+              <h3 className="text-2xl md:text-3xl font-semibold text-slate-950 mb-2">
+                Questions?
+              </h3>
+              <p className="text-slate-600">
+                We're here to help. Reach out anytime — no pressure, no obligations.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button
+                onClick={handleWhatsApp}
+                className="bg-green-500 hover:bg-green-600 text-white rounded-full px-6 py-5"
+                data-testid="questions-whatsapp-btn"
+              >
+                <MessageCircle className="mr-2 w-5 h-5" />
+                Chat on WhatsApp
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => window.location.href = "mailto:hello@falconwebstudio.com"}
+                className="rounded-full px-6 py-5 border-slate-300"
+                data-testid="questions-email-btn"
+              >
+                <Mail className="mr-2 w-5 h-5" />
+                Send Email
+              </Button>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
 // Main App
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -1041,7 +1198,7 @@ function App() {
       <PortfolioSection />
       <ProcessSection />
       <WhyChooseUsSection onOpenModal={() => setIsModalOpen(true)} />
-      <TestimonialsSection />
+      <QuestionsSection />
       <CTASection onOpenModal={() => setIsModalOpen(true)} />
       <Footer />
       <LeadCaptureModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
