@@ -1007,12 +1007,7 @@ const HeroSection = ({ onOpenModal }) => {
             transition={{ duration: 0.8, delay: 0.5 }}
             className="mt-16 pt-8 border-t border-slate-100"
           >
-            <p className="text-sm text-slate-500 mb-4">{t.trustedBy}</p>
-            <div className="flex items-center gap-8 opacity-50">
-              {["TechFlow", "Nexus", "Vertex", "Atlas"].map((company) => (
-                <span key={company} className="text-slate-400 font-semibold text-lg">{company}</span>
-              ))}
-            </div>
+            <p className="text-lg text-slate-600">{language === 'en' ? 'Ready to help your business grow online' : 'Redo att hjälpa ditt företag växa online'}</p>
           </motion.div>
         </div>
       </div>
