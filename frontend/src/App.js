@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "@/App.css";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import {
   Layout,
   RefreshCw,
@@ -18,8 +18,27 @@ import {
   Linkedin,
   Twitter,
   Quote,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Toaster, toast } from "sonner";
+import axios from "axios";
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
+
+// Falcon logo URL
+const FALCON_LOGO = "https://customer-assets.emergentagent.com/job_falcon-studio/artifacts/lbmevzfg_image.png";
 
 // Portfolio data
 const portfolioData = [
@@ -109,8 +128,153 @@ const featuresData = [
   { icon: BarChart, title: "Conversion Focused", description: "Designed to drive results" },
 ];
 
+// Flying Falcon Component - follows scroll
+const FlyingFalcon = () => {
+  const { scrollYProgress } = useScroll();
+  
+  // Transform scroll progress to position
+  const y = useTransform(scrollYProgress, [0, 1], [80, typeof window !== 'undefined' ? window.innerHeight - 150 : 600]);
+  const x = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [60, 100, 60, 80]);
+  const rotate = useTransform(scrollYProgress, [0, 0.5, 1], [0, 15, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.2, 1]);
+  const opacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [0, 1, 1, 0]);
+
+  return (
+    <motion.div
+      className="fixed z-40 pointer-events-none"
+      style={{
+        y,
+        x,
+        rotate,
+        scale,
+        opacity,
+      }}
+    >
+      <img 
+        src={FALCON_LOGO} 
+        alt="Flying Falcon" 
+        className="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-2xl"
+        style={{ filter: 'drop-shadow(0 4px 20px rgba(0,0,0,0.3))' }}
+      />
+    </motion.div>
+  );
+};
+
+// Lead Capture Modal Component
+const LeadCaptureModal = ({ isOpen, onClose }) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    business_name: "",
+    website_url: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      await axios.post(`${API}/leads`, formData);
+      toast.success("Request submitted! We'll be in touch within 24 hours.");
+      setFormData({ name: "", email: "", business_name: "", website_url: "", message: "" });
+      onClose();
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-lg bg-white" data-testid="lead-modal">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-bold text-slate-950 font-['Outfit']">
+            Request Free Website Preview
+          </DialogTitle>
+          <DialogDescription className="text-slate-600">
+            Tell us about your business and we'll design a homepage preview — completely free, no strings attached.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Your Name *</Label>
+              <Input
+                id="name"
+                required
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="John Doe"
+                data-testid="lead-name-input"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email *</Label>
+              <Input
+                id="email"
+                type="email"
+                required
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                placeholder="john@company.com"
+                data-testid="lead-email-input"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="business_name">Business Name</Label>
+              <Input
+                id="business_name"
+                value={formData.business_name}
+                onChange={(e) => setFormData({ ...formData, business_name: e.target.value })}
+                placeholder="Acme Inc."
+                data-testid="lead-business-input"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="website_url">Current Website (if any)</Label>
+              <Input
+                id="website_url"
+                value={formData.website_url}
+                onChange={(e) => setFormData({ ...formData, website_url: e.target.value })}
+                placeholder="https://..."
+                data-testid="lead-website-input"
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="message">Tell us about your project</Label>
+            <Textarea
+              id="message"
+              value={formData.message}
+              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+              placeholder="What does your business do? What are your goals for the website?"
+              rows={4}
+              data-testid="lead-message-input"
+            />
+          </div>
+          <Button
+            type="submit"
+            className="w-full btn-accent rounded-full py-6"
+            disabled={isSubmitting}
+            data-testid="lead-submit-btn"
+          >
+            {isSubmitting ? "Submitting..." : "Get My Free Preview"}
+            <Sparkles className="ml-2 w-5 h-5" />
+          </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 // Navigation component
-const Navigation = () => {
+const Navigation = ({ onOpenModal }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -140,10 +304,12 @@ const Navigation = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2" data-testid="logo-link">
-            <div className="w-10 h-10 bg-slate-950 flex items-center justify-center">
-              <div className="w-0 h-0 border-l-[12px] border-l-transparent border-b-[20px] border-b-white border-r-[12px] border-r-transparent transform -rotate-90" />
-            </div>
+          <a href="#" className="flex items-center gap-3" data-testid="logo-link">
+            <img 
+              src={FALCON_LOGO} 
+              alt="Falcon Web Studio" 
+              className="w-12 h-12 object-contain"
+            />
             <span className="text-xl font-bold text-slate-950 font-['Outfit']">Falcon</span>
           </a>
 
@@ -161,7 +327,7 @@ const Navigation = () => {
             ))}
             <Button
               className="btn-primary rounded-full px-6"
-              onClick={() => window.open("https://wa.me/", "_blank")}
+              onClick={onOpenModal}
               data-testid="nav-contact-btn"
             >
               Get Started
@@ -201,7 +367,10 @@ const Navigation = () => {
                 <div className="px-4">
                   <Button
                     className="btn-primary w-full rounded-full"
-                    onClick={() => window.open("https://wa.me/", "_blank")}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onOpenModal();
+                    }}
                   >
                     Get Started
                   </Button>
@@ -216,7 +385,7 @@ const Navigation = () => {
 };
 
 // Hero Section
-const HeroSection = () => {
+const HeroSection = ({ onOpenModal }) => {
   return (
     <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-white">
       {/* Geometric Background Elements */}
@@ -302,21 +471,22 @@ const HeroSection = () => {
           >
             <Button
               size="lg"
-              className="btn-primary rounded-full px-8 py-6 text-base font-medium group"
+              className="btn-accent rounded-full px-8 py-6 text-base font-medium group"
+              onClick={onOpenModal}
+              data-testid="hero-request-preview-btn"
+            >
+              <Sparkles className="mr-2 w-5 h-5" />
+              Request Free Website Preview
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="btn-outline rounded-full px-8 py-6 text-base font-medium group"
               onClick={() => document.getElementById('portfolio').scrollIntoView({ behavior: 'smooth' })}
               data-testid="hero-view-work-btn"
             >
               View Our Work
               <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="btn-outline rounded-full px-8 py-6 text-base font-medium"
-              onClick={() => document.getElementById('cta').scrollIntoView({ behavior: 'smooth' })}
-              data-testid="hero-demo-btn"
-            >
-              Get a Free Website Preview
             </Button>
           </motion.div>
 
@@ -499,7 +669,7 @@ const ProcessSection = () => {
 };
 
 // Why Choose Us Section
-const WhyChooseUsSection = () => {
+const WhyChooseUsSection = ({ onOpenModal }) => {
   return (
     <section id="features" className="py-24 md:py-32 bg-white">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -522,7 +692,7 @@ const WhyChooseUsSection = () => {
             </p>
             <Button
               className="btn-accent rounded-full px-8"
-              onClick={() => document.getElementById('cta').scrollIntoView({ behavior: 'smooth' })}
+              onClick={onOpenModal}
               data-testid="features-cta-btn"
             >
               Start Your Project <ArrowRight className="ml-2 w-5 h-5" />
@@ -607,7 +777,7 @@ const TestimonialsSection = () => {
 };
 
 // CTA Section
-const CTASection = () => {
+const CTASection = ({ onOpenModal }) => {
   const handleWhatsApp = () => {
     const message = encodeURIComponent("Hi, I'm interested in getting a free website demo from Falcon Web Studio.");
     window.open(`https://wa.me/?text=${message}`, "_blank");
@@ -636,21 +806,21 @@ const CTASection = () => {
             <Button
               size="lg"
               className="bg-white text-slate-950 hover:bg-slate-100 rounded-full px-8 py-6 text-base font-medium group"
-              onClick={handleWhatsApp}
+              onClick={onOpenModal}
               data-testid="cta-request-demo-btn"
             >
-              <MessageCircle className="mr-2 w-5 h-5" />
-              Request Demo via WhatsApp
+              <Sparkles className="mr-2 w-5 h-5" />
+              Request Free Website Preview
             </Button>
             <Button
               size="lg"
               variant="outline"
               className="border-white/30 text-white hover:bg-white/10 rounded-full px-8 py-6 text-base font-medium"
-              onClick={() => window.location.href = "mailto:hello@falconwebstudio.com"}
-              data-testid="cta-email-btn"
+              onClick={handleWhatsApp}
+              data-testid="cta-whatsapp-btn"
             >
-              <Mail className="mr-2 w-5 h-5" />
-              Contact via Email
+              <MessageCircle className="mr-2 w-5 h-5" />
+              Chat on WhatsApp
             </Button>
           </div>
         </motion.div>
@@ -664,15 +834,22 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="py-16 bg-slate-950">
+    <footer className="py-16 bg-slate-950 relative">
+      {/* Falcon landing spot indicator */}
+      <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
+        <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
+      </div>
+      
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid md:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div className="md:col-span-2">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-white flex items-center justify-center">
-                <div className="w-0 h-0 border-l-[12px] border-l-transparent border-b-[20px] border-b-slate-950 border-r-[12px] border-r-transparent transform -rotate-90" />
-              </div>
+            <div className="flex items-center gap-3 mb-4">
+              <img 
+                src={FALCON_LOGO} 
+                alt="Falcon Web Studio" 
+                className="w-12 h-12 object-contain invert"
+              />
               <span className="text-xl font-bold text-white font-['Outfit']">Falcon Web Studio</span>
             </div>
             <p className="text-slate-400 max-w-sm mb-6">
@@ -758,17 +935,22 @@ const Footer = () => {
 
 // Main App
 function App() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <div className="App">
-      <Navigation />
-      <HeroSection />
+      <Toaster position="top-center" richColors />
+      <FlyingFalcon />
+      <Navigation onOpenModal={() => setIsModalOpen(true)} />
+      <HeroSection onOpenModal={() => setIsModalOpen(true)} />
       <ServicesSection />
       <PortfolioSection />
       <ProcessSection />
-      <WhyChooseUsSection />
+      <WhyChooseUsSection onOpenModal={() => setIsModalOpen(true)} />
       <TestimonialsSection />
-      <CTASection />
+      <CTASection onOpenModal={() => setIsModalOpen(true)} />
       <Footer />
+      <LeadCaptureModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 }

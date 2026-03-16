@@ -1,0 +1,109 @@
+{
+  "timestamp": "2026-03-16T09:49:19.660035",
+  "total_tests": 5,
+  "passed_tests": 5,
+  "success_rate": "100.0%",
+  "detailed_results": [
+    {
+      "test_name": "Root API endpoint",
+      "method": "GET",
+      "endpoint": "",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": {
+        "message": "Hello World"
+      }
+    },
+    {
+      "test_name": "Create Lead",
+      "method": "POST",
+      "endpoint": "leads",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": {
+        "id": "38b58f57-1381-4ad8-a077-f6ce60e048ef",
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "business_name": "Test Business Inc",
+        "website_url": "https://testbusiness.com",
+        "message": "I would like a free website preview for my business",
+        "status": "new",
+        "created_at": "2026-03-16T09:49:19.245524Z"
+      }
+    },
+    {
+      "test_name": "Create Lead",
+      "method": "POST",
+      "endpoint": "leads",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": {
+        "id": "d7edca96-7b5c-4117-bcb6-5d2e75cce7c1",
+        "name": "Jane Smith",
+        "email": "jane.smith@example.com",
+        "business_name": null,
+        "website_url": null,
+        "message": null,
+        "status": "new",
+        "created_at": "2026-03-16T09:49:19.396319Z"
+      }
+    },
+    {
+      "test_name": "Create Lead with Invalid Data",
+      "method": "POST",
+      "endpoint": "leads",
+      "expected_status": 422,
+      "actual_status": 422,
+      "success": true,
+      "response_data": {
+        "detail": [
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "email"
+            ],
+            "msg": "Field required",
+            "input": {
+              "name": "Test"
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          }
+        ]
+      }
+    },
+    {
+      "test_name": "Get All Leads",
+      "method": "GET",
+      "endpoint": "leads",
+      "expected_status": 200,
+      "actual_status": 200,
+      "success": true,
+      "response_data": [
+        {
+          "id": "38b58f57-1381-4ad8-a077-f6ce60e048ef",
+          "name": "John Doe",
+          "email": "john.doe@example.com",
+          "business_name": "Test Business Inc",
+          "website_url": "https://testbusiness.com",
+          "message": "I would like a free website preview for my business",
+          "status": "new",
+          "created_at": "2026-03-16T09:49:19.245524Z"
+        },
+        {
+          "id": "d7edca96-7b5c-4117-bcb6-5d2e75cce7c1",
+          "name": "Jane Smith",
+          "email": "jane.smith@example.com",
+          "business_name": null,
+          "website_url": null,
+          "message": null,
+          "status": "new",
+          "created_at": "2026-03-16T09:49:19.396319Z"
+        }
+      ]
+    }
+  ]
+}

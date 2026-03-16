@@ -1,12 +1,12 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict
-from typing import List
+from pydantic import BaseModel, Field, ConfigDict, EmailStr
+from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
 
@@ -37,6 +37,26 @@ class StatusCheck(BaseModel):
 class StatusCheckCreate(BaseModel):
     client_name: str
 
+# Lead capture models
+class LeadCreate(BaseModel):
+    name: str
+    email: EmailStr
+    business_name: Optional[str] = None
+    website_url: Optional[str] = None
+    message: Optional[str] = None
+
+class Lead(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    email: str
+    business_name: Optional[str] = None
+    website_url: Optional[str] = None
+    message: Optional[str] = None
+    status: str = "new"
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
@@ -65,6 +85,32 @@ async def get_status_checks():
             check['timestamp'] = datetime.fromisoformat(check['timestamp'])
     
     return status_checks
+
+# Lead capture endpoints
+@api_router.post("/leads", response_model=Lead)
+async def create_lead(input: LeadCreate):
+    """Create a new lead from the website preview request form"""
+    lead_dict = input.model_dump()
+    lead_obj = Lead(**lead_dict)
+    
+    # Convert to dict and serialize datetime to ISO string for MongoDB
+    doc = lead_obj.model_dump()
+    doc['created_at'] = doc['created_at'].isoformat()
+    
+    await db.leads.insert_one(doc)
+    logger.info(f"New lead created: {lead_obj.email}")
+    return lead_obj
+
+@api_router.get("/leads", response_model=List[Lead])
+async def get_leads():
+    """Get all leads (for admin purposes)"""
+    leads = await db.leads.find({}, {"_id": 0}).to_list(1000)
+    
+    for lead in leads:
+        if isinstance(lead.get('created_at'), str):
+            lead['created_at'] = datetime.fromisoformat(lead['created_at'])
+    
+    return leads
 
 # Include the router in the main app
 app.include_router(api_router)
