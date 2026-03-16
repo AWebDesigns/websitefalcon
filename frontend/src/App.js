@@ -434,6 +434,18 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
             </div>
           )}
 
+          <div className="space-y-2">
+            <Label htmlFor="message">Tell us about your project / work</Label>
+            <Textarea
+              id="message"
+              value={formData.message}
+              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+              placeholder="Example: I'm looking for a modern, minimalist website for my consulting business with a booking system..."
+              rows={4}
+              data-testid="lead-message-input"
+              className="placeholder:text-slate-400 placeholder:italic"
+            />
+          </div>
           <Button
             type="submit"
             className="w-full btn-accent rounded-full py-6"
