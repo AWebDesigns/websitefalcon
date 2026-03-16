@@ -168,9 +168,21 @@ const FlyingFalcon = () => {
   );
   
   // Flip bird horizontally based on direction (1 = facing right, -1 = facing left)
-  const flipX = useTransform(scrollYProgress, [0, 0.24, 0.26, 0.49, 0.51, 0.74, 0.76, 1], 
+  const pathFlipX = useTransform(scrollYProgress, [0, 0.24, 0.26, 0.49, 0.51, 0.74, 0.76, 1], 
     [1, 1, -1, -1, 1, 1, -1, -1]
   );
+  
+  // Combined flip: path direction + scroll direction (up reverses it)
+  const [combinedFlipX, setCombinedFlipX] = useState(1);
+  
+  useEffect(() => {
+    const unsubscribe = pathFlipX.on('change', (pathValue) => {
+      // When scrolling up, reverse the horizontal direction
+      const directionMultiplier = scrollDirection === 'up' ? -1 : 1;
+      setCombinedFlipX(pathValue * directionMultiplier);
+    });
+    return () => unsubscribe();
+  }, [pathFlipX, scrollDirection]);
   
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1.5, 1]);
   
@@ -208,12 +220,11 @@ const FlyingFalcon = () => {
       <motion.div
         style={{ 
           rotate: bodyRotate,
-          scaleX: flipX,
           originX: 0.5,
           originY: 0.5,
         }}
         animate={{
-          scaleX: scrollDirection === 'up' ? -1 : 1,
+          scaleX: combinedFlipX,
         }}
         transition={{
           scaleX: { duration: 0.3, ease: "easeInOut" }
