@@ -609,7 +609,8 @@ const TestimonialsSection = () => {
 // CTA Section
 const CTASection = () => {
   const handleWhatsApp = () => {
-    window.open("https://wa.me/?text=Hi, I'm interested in getting a free website demo from Falcon Web Studio.", "_blank");
+    const message = encodeURIComponent("Hi, I'm interested in getting a free website demo from Falcon Web Studio.");
+    window.open(`https://wa.me/?text=${message}`, "_blank");
   };
 
   return (
