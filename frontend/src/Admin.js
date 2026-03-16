@@ -104,6 +104,20 @@ const LeadCard = ({ lead, onDelete }) => {
     });
   };
 
+  // Check if lead is less than 1 day old
+  const isNew = () => {
+    const createdAt = new Date(lead.created_at);
+    const now = new Date();
+    const oneDayMs = 24 * 60 * 60 * 1000;
+    return (now - createdAt) < oneDayMs;
+  };
+
+  const getProjectTypeLabel = (type) => {
+    if (type === 'new_website') return 'New Website';
+    if (type === 'fix_existing') return 'Redesign / Fix';
+    return type?.replace('_', ' ');
+  };
+
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to delete this lead?")) return;
     
@@ -131,13 +145,11 @@ const LeadCard = ({ lead, onDelete }) => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-            lead.status === 'new' 
-              ? 'bg-green-100 text-green-700' 
-              : 'bg-slate-100 text-slate-600'
-          }`}>
-            {lead.status}
-          </span>
+          {isNew() && (
+            <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+              new
+            </span>
+          )}
           <button
             onClick={handleDelete}
             disabled={isDeleting}
@@ -151,9 +163,9 @@ const LeadCard = ({ lead, onDelete }) => {
       
       <div className="space-y-3 text-sm">
         {lead.project_type && (
-          <div className="flex items-center gap-2 text-slate-600">
-            <Briefcase className="w-4 h-4 text-slate-400" />
-            <span className="capitalize">{lead.project_type.replace('_', ' ')}</span>
+          <div className="flex items-center gap-2">
+            <Briefcase className="w-4 h-4 text-blue-500" />
+            <span className="font-medium text-blue-600">{getProjectTypeLabel(lead.project_type)}</span>
           </div>
         )}
         
@@ -161,6 +173,18 @@ const LeadCard = ({ lead, onDelete }) => {
           <div className="flex items-center gap-2 text-slate-600">
             <Building2 className="w-4 h-4 text-slate-400" />
             <span>{lead.business_name}</span>
+          </div>
+        )}
+
+        {lead.phone && (
+          <div className="flex items-center gap-2 text-slate-600">
+            <Phone className="w-4 h-4 text-slate-400" />
+            <a 
+              href={`tel:${lead.phone}`}
+              className="hover:text-blue-500"
+            >
+              {lead.phone}
+            </a>
           </div>
         )}
         
