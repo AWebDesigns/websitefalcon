@@ -374,14 +374,6 @@ const portfolioData = [
       "https://customer-assets.emergentagent.com/job_176d58f8-ba28-4a29-a0a7-3a7eaa4a0b7c/artifacts/ebftyivw_Screenshot_17-3-2026_164026_landskrona-homes.preview.emergentagent.com.jpeg",
     ],
   },
-  {
-    id: 4,
-    title: "Pulse Health",
-    category: "Healthcare",
-    images: [
-      "https://images.unsplash.com/photo-1735399976112-17508533c97a?auto=format&fit=crop&w=800&q=80",
-    ],
-  },
 ];
 
 // Testimonials data
@@ -1162,6 +1154,29 @@ const PortfolioSection = () => {
           {portfolioData.map((project, index) => (
             <PortfolioCard key={project.id} project={project} index={index} />
           ))}
+          {/* Engaging text card in the 4th spot */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="rounded-2xl aspect-[4/3] bg-slate-950 flex flex-col justify-center px-10 md:px-14"
+            data-testid="portfolio-cta-card"
+          >
+            <span className="text-blue-400 text-sm font-medium tracking-wide uppercase mb-4">
+              {language === 'en' ? 'Your project next?' : 'Ditt projekt härnäst?'}
+            </span>
+            <h3 className="text-3xl md:text-4xl font-bold text-white leading-tight mb-4">
+              {language === 'en' ? "Let's build something" : 'Låt oss bygga något'}
+              <br />
+              <span className="text-blue-400">{language === 'en' ? 'extraordinary.' : 'extraordinärt.'}</span>
+            </h3>
+            <p className="text-slate-400 text-base leading-relaxed">
+              {language === 'en'
+                ? 'Every great brand deserves a website that works as hard as they do. Yours could be here.'
+                : 'Varje starkt varumärke förtjänar en webbplats som arbetar lika hårt som de gör. Din kan vara här.'}
+            </p>
+          </motion.div>
         </div>
       </div>
     </section>
