@@ -259,6 +259,7 @@ const Dashboard = ({ token, onLogout }) => {
 
   useEffect(() => {
     fetchLeads();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   const handleDelete = async (leadId) => {
