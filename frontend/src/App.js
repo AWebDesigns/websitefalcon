@@ -1160,18 +1160,18 @@ const PortfolioSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="rounded-2xl aspect-[4/3] bg-slate-950 flex flex-col justify-center px-10 md:px-14"
+            className="rounded-2xl aspect-[4/3] flex flex-col justify-center px-10 md:px-14"
             data-testid="portfolio-cta-card"
           >
-            <span className="text-blue-400 text-sm font-medium tracking-wide uppercase mb-4">
+            <span className="text-blue-500 text-sm font-medium tracking-wide uppercase mb-4">
               {language === 'en' ? 'Your project next?' : 'Ditt projekt härnäst?'}
             </span>
-            <h3 className="text-3xl md:text-4xl font-bold text-white leading-tight mb-4">
+            <h3 className="text-3xl md:text-4xl font-bold text-slate-950 leading-tight mb-4">
               {language === 'en' ? "Let's build something" : 'Låt oss bygga något'}
               <br />
-              <span className="text-blue-400">{language === 'en' ? 'extraordinary.' : 'extraordinärt.'}</span>
+              <span className="text-blue-500">{language === 'en' ? 'extraordinary.' : 'extraordinärt.'}</span>
             </h3>
-            <p className="text-slate-400 text-base leading-relaxed">
+            <p className="text-slate-500 text-base leading-relaxed">
               {language === 'en'
                 ? 'Every great brand deserves a website that works as hard as they do. Yours could be here.'
                 : 'Varje starkt varumärke förtjänar en webbplats som arbetar lika hårt som de gör. Din kan vara här.'}
