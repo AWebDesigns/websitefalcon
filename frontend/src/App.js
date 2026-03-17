@@ -1007,7 +1007,7 @@ const HeroSection = ({ onOpenModal }) => {
             transition={{ duration: 0.8, delay: 0.5 }}
             className="mt-16 pt-8 border-t border-slate-100"
           >
-            <p className="text-lg text-slate-600">{language === 'en' ? 'Ready to help your business grow online' : 'Redo att hjälpa ditt företag växa online'}</p>
+            <p className="text-lg text-slate-600">{language === 'en' ? 'Ready to help your business grow online?' : 'Redo att hjälpa ditt företag växa online?'}</p>
           </motion.div>
         </div>
       </div>
