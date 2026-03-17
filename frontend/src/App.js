@@ -348,11 +348,11 @@ const portfolioData = [
     id: 1,
     title: "WAbilvård",
     category: "Automotive",
-    imagePosition: "left top",
+    imagePosition: "center",
     images: [
       "https://customer-assets.emergentagent.com/job_falcon-studio/artifacts/mksuf8yz_Screenshot_17-3-2026_13541_www.xn--wabilvrd-f0a.com.jpeg",
-      "https://customer-assets.emergentagent.com/job_falcon-studio/artifacts/lhycqnuo_Screenshot_17-3-2026_13560_www.xn--wabilvrd-f0a.com.jpeg",
-      "https://customer-assets.emergentagent.com/job_falcon-studio/artifacts/4e0a8936_Screenshot_17-3-2026_135646_www.xn--wabilvrd-f0a.com.jpeg",
+      "https://customer-assets.emergentagent.com/job_176d58f8-ba28-4a29-a0a7-3a7eaa4a0b7c/artifacts/lwj5tpwg_Screenshot_17-3-2026_171115_wash-demo.preview.emergentagent.com.jpeg",
+      "https://customer-assets.emergentagent.com/job_176d58f8-ba28-4a29-a0a7-3a7eaa4a0b7c/artifacts/bgcmkkvg_Screenshot_17-3-2026_171151_wash-demo.preview.emergentagent.com.jpeg",
     ],
   },
   {
