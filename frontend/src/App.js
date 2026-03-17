@@ -370,7 +370,7 @@ const portfolioData = [
     category: "Real Estate",
     images: [
       "https://customer-assets.emergentagent.com/job_176d58f8-ba28-4a29-a0a7-3a7eaa4a0b7c/artifacts/kipygt9v_Screenshot_17-3-2026_163724_landskrona-homes.preview.emergentagent.com.jpeg",
-      "https://customer-assets.emergentagent.com/job_176d58f8-ba28-4a29-a0a7-3a7eaa4a0b7c/artifacts/kdfpknry_Screenshot_17-3-2026_163742_landskrona-homes.preview.emergentagent.com.jpeg",
+      "https://customer-assets.emergentagent.com/job_176d58f8-ba28-4a29-a0a7-3a7eaa4a0b7c/artifacts/ebftyivw_Screenshot_17-3-2026_164026_landskrona-homes.preview.emergentagent.com.jpeg",
     ],
   },
   {
