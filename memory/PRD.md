@@ -6,7 +6,7 @@ Build a modern, high-end website for a web design agency called **Falcon Web Stu
 ## Core Features (Implemented)
 - Hero section with CTAs
 - Services section (Website Design, Redesign, Conversion Optimization)
-- Portfolio slideshow (auto-playing, 4-second transitions) with WAbilvard as first project
+- Portfolio 2x2 grid with individual image cycling (4-second transitions per card). WAbilvård card cycles through 3 user-provided screenshots.
 - Process timeline (Strategy, Design, Development, Launch)
 - Why Choose Us section
 - Questions section with WhatsApp/Email
@@ -38,14 +38,14 @@ Backend is in `/app/backend/server.py`.
 - Lead capture + admin dashboard
 - Resend email notifications
 - EN/SV translations
-- Portfolio converted from static grid to auto-playing slideshow (4s interval)
-- WAbilvard project added as first portfolio item
+- Portfolio: 2x2 grid layout with per-card image cycling (4s interval)
+- WAbilvård project: 3 screenshots cycling in first card
 
 ## Known Issues
 - Resend notifications go to abbesalem977@gmail.com (free tier limitation). User needs to verify domain to switch to falconwebdesignit@gmail.com
 - "Made with Emergent" badge is a platform watermark (cannot be removed in preview)
 
 ## Backlog
-- P1: User will provide more portfolio images to replace all placeholders
+- P1: User will provide more portfolio images to replace remaining placeholders
 - P2: Replace placeholder client logos in "Trusted by" section
 - P2: Switch notification email after Resend domain verification

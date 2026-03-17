@@ -342,31 +342,41 @@ const LanguageSwitcher = () => {
   );
 };
 
-// Portfolio data
+// Portfolio data - each project has an array of images that cycle
 const portfolioData = [
   {
     id: 1,
     title: "WAbilvård",
     category: "Automotive",
-    image: "https://customer-assets.emergentagent.com/job_falcon-studio/artifacts/mksuf8yz_Screenshot_17-3-2026_13541_www.xn--wabilvrd-f0a.com.jpeg",
+    images: [
+      "https://customer-assets.emergentagent.com/job_falcon-studio/artifacts/mksuf8yz_Screenshot_17-3-2026_13541_www.xn--wabilvrd-f0a.com.jpeg",
+      "https://customer-assets.emergentagent.com/job_falcon-studio/artifacts/lhycqnuo_Screenshot_17-3-2026_13560_www.xn--wabilvrd-f0a.com.jpeg",
+      "https://customer-assets.emergentagent.com/job_falcon-studio/artifacts/4e0a8936_Screenshot_17-3-2026_135646_www.xn--wabilvrd-f0a.com.jpeg",
+    ],
   },
   {
     id: 2,
     title: "Nexus Finance",
     category: "Fintech",
-    image: "https://images.unsplash.com/photo-1663177320254-51b22caf9ebd?auto=format&fit=crop&w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1663177320254-51b22caf9ebd?auto=format&fit=crop&w=800&q=80",
+    ],
   },
   {
     id: 3,
     title: "Vertex Studio",
     category: "Creative Agency",
-    image: "https://images.unsplash.com/photo-1641567535859-c58187ac4954?auto=format&fit=crop&w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1641567535859-c58187ac4954?auto=format&fit=crop&w=800&q=80",
+    ],
   },
   {
     id: 4,
     title: "Pulse Health",
     category: "Healthcare",
-    image: "https://images.unsplash.com/photo-1735399976112-17508533c97a?auto=format&fit=crop&w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1735399976112-17508533c97a?auto=format&fit=crop&w=800&q=80",
+    ],
   },
 ];
 
@@ -1073,28 +1083,52 @@ const ServicesSection = () => {
   );
 };
 
-// Portfolio Section - Auto-playing Slideshow
+// Portfolio Card - individual image cycling per card
+const PortfolioCard = ({ project, index }) => {
+  const [currentImage, setCurrentImage] = useState(0);
+
+  useEffect(() => {
+    if (project.images.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % project.images.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [project.images.length]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+      className="portfolio-item group rounded-2xl overflow-hidden aspect-[4/3] cursor-pointer relative"
+      data-testid={`portfolio-item-${index}`}
+    >
+      <AnimatePresence mode="wait">
+        <motion.img
+          key={currentImage}
+          src={project.images[currentImage]}
+          alt={project.title}
+          className="w-full h-full object-cover absolute inset-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.7 }}
+          data-testid={`portfolio-img-${index}`}
+        />
+      </AnimatePresence>
+      <div className="portfolio-overlay text-white">
+        <span className="text-sm font-medium text-blue-400 mb-2 block">{project.category}</span>
+        <h3 className="text-2xl font-semibold">{project.title}</h3>
+      </div>
+    </motion.div>
+  );
+};
+
+// Portfolio Section - 2x2 grid with individual image cycling
 const PortfolioSection = () => {
   const { language } = useLanguage();
   const t = translations[language].portfolio;
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-  const intervalRef = useRef(null);
-
-  // Auto-play every 4 seconds, pause on hover
-  useEffect(() => {
-    if (!isHovered) {
-      intervalRef.current = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % portfolioData.length);
-      }, 4000);
-    }
-    return () => clearInterval(intervalRef.current);
-  }, [isHovered]);
-
-  const goToSlide = (index) => {
-    setCurrentSlide(index);
-    clearInterval(intervalRef.current);
-  };
 
   return (
     <section id="portfolio" className="py-24 md:py-32 bg-white">
@@ -1119,68 +1153,9 @@ const PortfolioSection = () => {
           </p>
         </motion.div>
 
-        {/* Slideshow */}
-        <div
-          className="relative rounded-2xl overflow-hidden aspect-[16/9] cursor-pointer bg-slate-100"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          data-testid="portfolio-slideshow"
-        >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentSlide}
-              initial={{ opacity: 0, scale: 1.05 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98 }}
-              transition={{ duration: 0.7, ease: "easeInOut" }}
-              className="absolute inset-0"
-            >
-              <img
-                src={portfolioData[currentSlide].image}
-                alt={portfolioData[currentSlide].title}
-                className="w-full h-full object-cover"
-                data-testid={`portfolio-slide-${currentSlide}`}
-              />
-              {/* Hover overlay with project info */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-8 md:p-12">
-                <div className="text-white">
-                  <span className="text-sm font-medium text-blue-400 mb-2 block">{portfolioData[currentSlide].category}</span>
-                  <h3 className="text-3xl md:text-4xl font-semibold" data-testid="portfolio-slide-title">{portfolioData[currentSlide].title}</h3>
-                </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Navigation arrows */}
-          <button
-            onClick={() => goToSlide((currentSlide - 1 + portfolioData.length) % portfolioData.length)}
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity shadow-lg z-10"
-            data-testid="portfolio-prev-btn"
-          >
-            <ChevronRight className="w-5 h-5 text-slate-900 rotate-180" />
-          </button>
-          <button
-            onClick={() => goToSlide((currentSlide + 1) % portfolioData.length)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity shadow-lg z-10"
-            data-testid="portfolio-next-btn"
-          >
-            <ChevronRight className="w-5 h-5 text-slate-900" />
-          </button>
-        </div>
-
-        {/* Dot indicators */}
-        <div className="flex justify-center gap-3 mt-8" data-testid="portfolio-dots">
-          {portfolioData.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                index === currentSlide 
-                  ? "w-8 bg-blue-500" 
-                  : "w-2 bg-slate-300 hover:bg-slate-400"
-              }`}
-              data-testid={`portfolio-dot-${index}`}
-            />
+        <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+          {portfolioData.map((project, index) => (
+            <PortfolioCard key={project.id} project={project} index={index} />
           ))}
         </div>
       </div>
