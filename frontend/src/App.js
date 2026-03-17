@@ -358,6 +358,7 @@ const portfolioData = [
     id: 2,
     title: "Noura's Cookies",
     category: "Bakery",
+    imagePosition: "left top",
     images: [
       "https://customer-assets.emergentagent.com/job_176d58f8-ba28-4a29-a0a7-3a7eaa4a0b7c/artifacts/hwdwzmrl_Screenshot_17-3-2026_162444_noura-treats.preview.emergentagent.com.jpeg",
       "https://customer-assets.emergentagent.com/job_176d58f8-ba28-4a29-a0a7-3a7eaa4a0b7c/artifacts/micgyzwq_Screenshot_17-3-2026_162838_noura-treats.preview.emergentagent.com.jpeg",
@@ -1111,6 +1112,7 @@ const PortfolioCard = ({ project, index }) => {
           src={project.images[currentImage]}
           alt={project.title}
           className="w-full h-full object-cover absolute inset-0"
+          style={{ objectPosition: project.imagePosition || "center" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
