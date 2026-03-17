@@ -162,7 +162,7 @@ async def send_lead_notification(lead: Lead):
             {f'<div style="margin-top: 20px; padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #3b82f6;"><strong>Message:</strong><br/><p style="margin: 10px 0 0 0; color: #475569;">{lead.message}</p></div>' if lead.message else ''}
             
             <div style="margin-top: 20px; padding: 15px; background: #0f172a; border-radius: 8px; text-align: center;">
-                <a href="https://falcon-studio.preview.emergentagent.com/admin" style="color: white; text-decoration: none; font-weight: bold;">View in Admin Dashboard →</a>
+                <a href="https://falcon-showcase.preview.emergentagent.com/admin" style="color: white; text-decoration: none; font-weight: bold;">View in Admin Dashboard →</a>
             </div>
         </div>
         <p style="color: #94a3b8; font-size: 12px; text-align: center; margin-top: 20px;">
