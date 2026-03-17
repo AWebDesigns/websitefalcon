@@ -356,10 +356,11 @@ const portfolioData = [
   },
   {
     id: 2,
-    title: "Nexus Finance",
-    category: "Fintech",
+    title: "Noura's Cookies",
+    category: "Bakery",
     images: [
-      "https://images.unsplash.com/photo-1663177320254-51b22caf9ebd?auto=format&fit=crop&w=800&q=80",
+      "https://customer-assets.emergentagent.com/job_176d58f8-ba28-4a29-a0a7-3a7eaa4a0b7c/artifacts/hwdwzmrl_Screenshot_17-3-2026_162444_noura-treats.preview.emergentagent.com.jpeg",
+      "https://customer-assets.emergentagent.com/job_176d58f8-ba28-4a29-a0a7-3a7eaa4a0b7c/artifacts/micgyzwq_Screenshot_17-3-2026_162838_noura-treats.preview.emergentagent.com.jpeg",
     ],
   },
   {
