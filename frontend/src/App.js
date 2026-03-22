@@ -1355,7 +1355,7 @@ const CTASection = ({ onOpenModal }) => {
   const t = translations[language].cta;
   
   const handleWhatsApp = () => {
-    window.open("https://m.me/falconwebstudio", "_blank");
+    window.open("https://www.facebook.com/falconwebstudio/", "_blank");
   };
 
   return (
@@ -1409,7 +1409,7 @@ const QuestionsSection = () => {
   const t = translations[language].questions;
   
   const handleWhatsApp = () => {
-    window.open("https://m.me/falconwebstudio", "_blank");
+    window.open("https://www.facebook.com/falconwebstudio/", "_blank");
   };
 
   return (
