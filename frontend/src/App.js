@@ -13,10 +13,9 @@ import {
   Menu,
   X,
   ArrowRight,
-  MessageCircle,
   Mail,
-  Linkedin,
-  Twitter,
+  Facebook,
+  Instagram,
   Quote,
   Sparkles,
 } from "lucide-react";
@@ -124,7 +123,7 @@ const translations = {
     questions: {
       title: "Questions?",
       subtitle: "We're here to help. Reach out anytime — no pressure, no obligations.",
-      whatsapp: "Chat on WhatsApp",
+      whatsapp: "Chat on Messenger",
       email: "Send Email",
     },
     // CTA
@@ -133,14 +132,14 @@ const translations = {
       title: "Get Your Free Website Demo",
       subtitle: "We will design a homepage preview for your business before you pay anything. No commitment, no risk.",
       ctaPreview: "Request Free Website Preview",
-      ctaWhatsapp: "Chat on WhatsApp",
+      ctaWhatsapp: "Chat on Messenger",
     },
     // Footer
     footer: {
       description: "Premium web design agency crafting high-performance websites for businesses that want to grow online.",
       quickLinks: "Quick Links",
       contact: "Contact",
-      whatsappAvailable: "WhatsApp Available",
+      whatsappAvailable: "Messenger Available",
       rights: "All rights reserved.",
       tagline: "Designed with precision. Built for performance.",
     },
@@ -158,10 +157,10 @@ const translations = {
       businessName: "Business Name",
       currentWebsite: "Current Website (if any)",
       preferredContact: "Preferred contact method for your preview",
-      whatsapp: "WhatsApp",
+      whatsapp: "Messenger",
       fasterResponse: "Faster response",
       traditional: "Traditional",
-      whatsappNumber: "WhatsApp Number",
+      whatsappNumber: "Messenger Name",
       projectWork: "Tell us about your project / work",
       projectPlaceholder: "Example: I'm looking for a modern, minimalist website for my consulting business with a booking system...",
       submit: "Get My Free Preview",
@@ -253,14 +252,14 @@ const translations = {
       title: "Få din gratis webbdemo",
       subtitle: "Vi designar en förhandsvisning av startsidan för ditt företag innan du betalar något. Ingen förbindelse, ingen risk.",
       ctaPreview: "Begär gratis webbförhandsvisning",
-      ctaWhatsapp: "Chatta på WhatsApp",
+      ctaWhatsapp: "Chatta på Messenger",
     },
     // Footer
     footer: {
       description: "Premium webbdesignbyrå som skapar högpresterande webbplatser för företag som vill växa online.",
       quickLinks: "Snabblänkar",
       contact: "Kontakt",
-      whatsappAvailable: "WhatsApp tillgänglig",
+      whatsappAvailable: "Messenger tillgänglig",
       rights: "Alla rättigheter förbehållna.",
       tagline: "Designad med precision. Byggd för prestanda.",
     },
@@ -278,10 +277,10 @@ const translations = {
       businessName: "Företagsnamn",
       currentWebsite: "Nuvarande webbplats (om någon)",
       preferredContact: "Föredragen kontaktmetod för din förhandsvisning",
-      whatsapp: "WhatsApp",
+      whatsapp: "Messenger",
       fasterResponse: "Snabbare svar",
       traditional: "Traditionell",
-      whatsappNumber: "WhatsApp-nummer",
+      whatsappNumber: "Messenger-namn",
       projectWork: "Berätta om ditt projekt / arbete",
       projectPlaceholder: "Exempel: Jag letar efter en modern, minimalistisk webbplats för mitt konsultföretag med ett bokningssystem...",
       submit: "Få min gratis förhandsvisning",
@@ -573,7 +572,7 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
     website_url: "",
     message: "",
     project_type: "",
-    preferred_contact: "whatsapp",
+    preferred_contact: "messenger",
     phone: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -696,15 +695,15 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
-                onClick={() => setFormData({ ...formData, preferred_contact: "whatsapp" })}
+                onClick={() => setFormData({ ...formData, preferred_contact: "messenger" })}
                 className={`p-3 rounded-xl border-2 flex items-center gap-3 transition-all ${
-                  formData.preferred_contact === "whatsapp" 
+                  formData.preferred_contact === "messenger" 
                     ? "border-blue-500 bg-blue-50" 
                     : "border-slate-200 hover:border-slate-300"
                 }`}
-                data-testid="contact-whatsapp"
+                data-testid="contact-messenger"
               >
-                <MessageCircle className="w-5 h-5 text-green-500" />
+                <Facebook className="w-5 h-5 text-blue-600" />
                 <div>
                   <div className="font-medium text-slate-900 text-sm">{t.whatsapp}</div>
                   <div className="text-xs text-slate-500">{t.fasterResponse}</div>
@@ -729,17 +728,16 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
             </div>
           </div>
 
-          {formData.preferred_contact === "whatsapp" && (
+          {formData.preferred_contact === "messenger" && (
             <div className="space-y-2">
               <Label htmlFor="phone">{t.whatsappNumber} *</Label>
               <Input
                 id="phone"
-                type="tel"
-                required={formData.preferred_contact === "whatsapp"}
+                required={formData.preferred_contact === "messenger"}
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                placeholder="+1 234 567 8900"
-                data-testid="lead-phone-input"
+                placeholder="@username"
+                data-testid="lead-messenger-input"
               />
             </div>
           )}
@@ -1357,10 +1355,7 @@ const CTASection = ({ onOpenModal }) => {
   const t = translations[language].cta;
   
   const handleWhatsApp = () => {
-    const message = encodeURIComponent(language === 'en'
-      ? "Hi, I'm interested in getting a free website demo from Falcon Web Studio."
-      : "Hej, jag är intresserad av att få en gratis webbdemo från Falcon Web Studio.");
-    window.open(`https://wa.me/46735066026?text=${message}`, "_blank");
+    window.open("https://m.me/falconwebstudio", "_blank");
   };
 
   return (
@@ -1396,9 +1391,9 @@ const CTASection = ({ onOpenModal }) => {
               variant="outline"
               className="border-white/30 text-white hover:bg-white/10 rounded-full px-8 py-6 text-base font-medium"
               onClick={handleWhatsApp}
-              data-testid="cta-whatsapp-btn"
+              data-testid="cta-messenger-btn"
             >
-              <MessageCircle className="mr-2 w-5 h-5" />
+              <Facebook className="mr-2 w-5 h-5" />
               {t.ctaWhatsapp}
             </Button>
           </div>
@@ -1414,10 +1409,7 @@ const QuestionsSection = () => {
   const t = translations[language].questions;
   
   const handleWhatsApp = () => {
-    const message = encodeURIComponent(language === 'en' 
-      ? "Hi, I have a question about your web design services."
-      : "Hej, jag har en fråga om era webbdesigntjänster.");
-    window.open(`https://wa.me/46735066026?text=${message}`, "_blank");
+    window.open("https://m.me/falconwebstudio", "_blank");
   };
 
   return (
@@ -1442,10 +1434,10 @@ const QuestionsSection = () => {
             <div className="flex flex-col sm:flex-row gap-4">
               <Button
                 onClick={handleWhatsApp}
-                className="bg-green-500 hover:bg-green-600 text-white rounded-full px-6 py-5"
-                data-testid="questions-whatsapp-btn"
+                className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6 py-5"
+                data-testid="questions-messenger-btn"
               >
-                <MessageCircle className="mr-2 w-5 h-5" />
+                <Facebook className="mr-2 w-5 h-5" />
                 {t.whatsapp}
               </Button>
               <Button
@@ -1496,13 +1488,22 @@ const Footer = () => {
             </p>
             <div className="flex gap-4">
               <a
-                href="https://wa.me/46735066026"
+                href="https://www.facebook.com/falconwebstudio/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors"
-                data-testid="footer-whatsapp-link"
+                data-testid="footer-facebook-link"
               >
-                <MessageCircle className="w-5 h-5 text-white" />
+                <Facebook className="w-5 h-5 text-white" />
+              </a>
+              <a
+                href="https://www.instagram.com/falconwebstudio/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors"
+                data-testid="footer-instagram-link"
+              >
+                <Instagram className="w-5 h-5 text-white" />
               </a>
               <a
                 href="mailto:falconwebdesignit@gmail.com"
@@ -1510,24 +1511,6 @@ const Footer = () => {
                 data-testid="footer-email-link"
               >
                 <Mail className="w-5 h-5 text-white" />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors"
-                data-testid="footer-linkedin-link"
-              >
-                <Linkedin className="w-5 h-5 text-white" />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors"
-                data-testid="footer-twitter-link"
-              >
-                <Twitter className="w-5 h-5 text-white" />
               </a>
             </div>
           </div>
