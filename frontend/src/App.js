@@ -1355,7 +1355,7 @@ const CTASection = ({ onOpenModal }) => {
   const t = translations[language].cta;
   
   const handleWhatsApp = () => {
-    window.open("https://www.facebook.com/falconwebstudio/", "_blank");
+    window.open("https://www.facebook.com/share/18B82oETEc/?mibextid=wwXIfr", "_blank");
   };
 
   return (
@@ -1409,7 +1409,7 @@ const QuestionsSection = () => {
   const t = translations[language].questions;
   
   const handleWhatsApp = () => {
-    window.open("https://www.facebook.com/falconwebstudio/", "_blank");
+    window.open("https://www.facebook.com/share/18B82oETEc/?mibextid=wwXIfr", "_blank");
   };
 
   return (
@@ -1488,7 +1488,7 @@ const Footer = () => {
             </p>
             <div className="flex gap-4">
               <a
-                href="https://www.facebook.com/falconwebstudio/"
+                href="https://www.facebook.com/share/18B82oETEc/?mibextid=wwXIfr"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors"
@@ -1497,7 +1497,7 @@ const Footer = () => {
                 <Facebook className="w-5 h-5 text-white" />
               </a>
               <a
-                href="https://www.instagram.com/falconwebstudio/"
+                href="https://www.instagram.com/falconwebstudio?igsh=MWxydzNhdnlqdnQybA%3D%3D&utm_source=qr"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors"
