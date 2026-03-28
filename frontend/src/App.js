@@ -243,7 +243,7 @@ const translations = {
     questions: {
       title: "Frågor?",
       subtitle: "Vi finns här för att hjälpa. Kontakta oss när som helst — ingen press, inga förpliktelser.",
-      whatsapp: "Chatta på WhatsApp",
+      whatsapp: "Chatta på Messenger",
       email: "Skicka e-post",
     },
     // CTA
